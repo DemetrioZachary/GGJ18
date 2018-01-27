@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 
-    public enum Types { Green, Red, Blue, Yellow };
+    public enum Types { None, Green, Red, Blue, Yellow };
 
     // Use this for initialization
     void Start() {
