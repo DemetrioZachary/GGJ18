@@ -5,19 +5,33 @@ using XInputDotNetPure;
 
 public class PlayerController : MonoBehaviour {
     public int player;
-    public int teamMatePlayer;
     public float speed = 1;
     public float railLength = 10;
     public float angle = 0;
     public Projectile projectilePrefab;
 
+    public TransmissionElement[] currSequence = new TransmissionElement[10];
+    public int currSequenceNumElement;
+    public int currSequenceElement;
+    public int currResponseElement;
+
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
     private SpriteRenderer spriteRenderer;
 
-    PlayerIndex playerIndex;
-    GamePadState[] state = new GamePadState[2];
-    GamePadState[] prevState = new GamePadState[2];
+    private float sequencePlayTime = -1f;
+    private float responsePlayTime = -1f;
+
+    GamePadState state;
+    GamePadState prevState;
+
+    private void Awake()
+    {
+        for(int i=0; i<10;++i)
+        {
+            currSequence[i] = new TransmissionElement();
+        }
+    }
 
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -28,11 +42,8 @@ public class PlayerController : MonoBehaviour {
 
     void Update() {
 
-        prevState[0] = state[0];
-        state[0] = GamePad.GetState((PlayerIndex)player);
-
-        prevState[1] = state[1];
-        state[1] = GamePad.GetState((PlayerIndex)teamMatePlayer);
+        prevState = state;
+        state = GamePad.GetState((PlayerIndex)player);
 
         Move();
         SetShield();
@@ -43,7 +54,82 @@ public class PlayerController : MonoBehaviour {
     {
         // SetVibration should be sent in a slower rate.
         // Set vibration according to triggers
-        GamePad.SetVibration((PlayerIndex)teamMatePlayer, state[0].Triggers.Left, state[0].Triggers.Right);
+        if (sequencePlayTime >= 0f)
+        {
+            float leftRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Left || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
+            float rightRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Right || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
+            GamePad.SetVibration((PlayerIndex)player, leftRumble, rightRumble);
+            sequencePlayTime += Time.fixedDeltaTime;
+            if (sequencePlayTime > currSequence[currSequenceElement].duration)
+            {
+                currSequenceElement++;
+                if (currSequenceElement == currSequenceNumElement)
+                {
+                    sequencePlayTime = -1f;
+                    responsePlayTime = 0f;
+                    currResponseElement = -1;
+                }
+                else
+                {
+                    sequencePlayTime = 0f;
+                }
+            }
+        } 
+        else if(responsePlayTime >= 0f)
+        {
+            responsePlayTime += Time.fixedDeltaTime;
+
+            bool leftRumble = state.Triggers.Left > 0.5f;
+            bool rightRumble = state.Triggers.Right > 0.5f;
+            GamePad.SetVibration((PlayerIndex)player, state.Triggers.Left, state.Triggers.Right);
+            if (currResponseElement == -1 || currSequence[currResponseElement].responseType == TransmissionElement.Types.None)
+            {
+                if (leftRumble || rightRumble)
+                {
+                    if(currResponseElement == -1)
+                        currResponseElement = 0;
+                    responsePlayTime = 0;
+                    currSequence[currResponseElement].responseType = leftRumble && rightRumble ? TransmissionElement.Types.Both : leftRumble ? TransmissionElement.Types.Left : TransmissionElement.Types.Right;
+                }
+            }
+            else if(currSequence[currResponseElement].responseType == TransmissionElement.Types.Left && (!leftRumble || rightRumble) ||
+                currSequence[currResponseElement].responseType == TransmissionElement.Types.Right && (leftRumble || !rightRumble) ||
+                currSequence[currResponseElement].responseType == TransmissionElement.Types.Both && (!leftRumble || !rightRumble))
+            {
+                currSequence[currResponseElement].responseDuration = responsePlayTime;
+                currResponseElement++;
+                responsePlayTime = 0f;
+            }
+        }
+        else
+        {
+            GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
+        }
+
+    }
+
+    public void StartSequence()
+    {
+        sequencePlayTime = 0f;
+        currSequenceElement = 0;
+
+        currSequenceNumElement = 5;
+        currSequence[0].Set(TransmissionElement.Types.Left, 2f);
+        currSequence[1].Set(TransmissionElement.Types.Right, 1.5f);
+        currSequence[2].Set(TransmissionElement.Types.Left, 2f);
+        //currSequence[3].Set(TransmissionElement.Types.Right, 1f);
+        //currSequence[4].Set(TransmissionElement.Types.Left, 1.5f);
+    }
+
+    public float SequenceRatio()
+    {
+        float ratio = 0f;
+        for(int i= 0; i< currSequenceNumElement; ++i)
+        {
+            ratio += (currSequence[i].type == currSequence[i].responseType ? 0f : 1f) * (1f - Mathf.Abs(currSequence[i].responseDuration - currSequence[i].duration)) / (float)currSequenceNumElement;
+        }
+
+        return ratio;
     }
 
     private void Move() {
@@ -55,15 +141,15 @@ public class PlayerController : MonoBehaviour {
 
     private void SetShield() {
         shield = GameManager.Types.None;
-        //if (prevState[1].DPad.Down == ButtonState.Released && state[1].DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
-        //else if(prevState[1].DPad.Right == ButtonState.Released && state[1].DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
-        //else if (prevState[1].DPad.Left == ButtonState.Released && state[1].DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
-        //else if (prevState[1].DPad.Up == ButtonState.Released && state[1].DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
+        //if (prevState.DPad.Down == ButtonState.Released && state.DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
+        //else if(prevState.DPad.Right == ButtonState.Released && state.DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
+        //else if (prevState.DPad.Left == ButtonState.Released && state.DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
+        //else if (prevState.DPad.Up == ButtonState.Released && state.DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
-        if (prevState[1].Buttons.A == ButtonState.Released && state[1].Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
-        else if (prevState[1].Buttons.B == ButtonState.Released && state[1].Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
-        else if (prevState[1].Buttons.X == ButtonState.Released && state[1].Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
-        else if (prevState[1].Buttons.Y == ButtonState.Released && state[1].Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
+        else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
+        else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
+        else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
         switch (shield) {
             case GameManager.Types.Green:
@@ -87,12 +173,17 @@ public class PlayerController : MonoBehaviour {
 
     private void Fire() {
         GameManager.Types type;
-        if (prevState[0].Buttons.A == ButtonState.Released && state[0].Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
-        else if (prevState[0].Buttons.B == ButtonState.Released && state[0].Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
-        else if (prevState[0].Buttons.X == ButtonState.Released && state[0].Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
-        else if (prevState[0].Buttons.Y == ButtonState.Released && state[0].Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
-        else { return; }
-        Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity) as Projectile;
-        projectile.Initialize(player == 1 ? 1 : -1, type);
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        {
+            StartSequence();
+        }
+
+        //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
+        //else if (prevState[0].Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
+        //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
+        //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
+        //else { return; }
+        //Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity) as Projectile;
+        //projectile.Initialize(player == 1 ? 1 : -1, type);
     }
 }
