@@ -494,6 +494,14 @@ Prefab:
       propertyPath: m_Name
       value: MainCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1312000513643040, guid: 1ceff4e8c506d5e40b5f2622a5788da8, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1463586635651168, guid: 1ceff4e8c506d5e40b5f2622a5788da8, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1ceff4e8c506d5e40b5f2622a5788da8, type: 2}
   m_IsPrefabParent: 0
@@ -799,7 +807,7 @@ Prefab:
       objectReference: {fileID: 1062304972}
     - target: {fileID: 1529229808992462, guid: 44355343aa0402c4ba639c90b5470bd1, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44355343aa0402c4ba639c90b5470bd1, type: 2}

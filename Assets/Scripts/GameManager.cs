@@ -104,6 +104,14 @@ public class GameManager : MonoBehaviour {
         }
     }// ------------------------------------------------------------------
     
+    private void StartNewGame() {
+
+    }
+
+    private void StopGame() {
+
+    }
+
     public void Resume() {
         ChangeState(State.Game);
     }

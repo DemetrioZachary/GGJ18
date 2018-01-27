@@ -4,12 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using XInputDotNetPure;
 
-public class PlayerController : MonoBehaviour
-{
-    public delegate void ScorePointEventhandler(PlayerController sender, float latestScore);
-
-    public ScorePointEventhandler OnScorePoint;
-
+public class PlayerController : MonoBehaviour {
     public int player;
     public float speed = 1;
     public float railLength = 10;
@@ -34,8 +29,10 @@ public class PlayerController : MonoBehaviour
 
     private float delayCheck = -1f;
 
-    private float latestScore = 0f;
+    public float latestScore = 0f;
     public float totalScore = 0f;
+
+    public bool sequenceUltimated;
 
     public Text SequenceFeedback;
 
@@ -50,12 +47,10 @@ public class PlayerController : MonoBehaviour
 
     const float RUMBLE_TRIGGER = 0.7f;
 
-    private float nextSequenceTimer = 0;
-
-    public void StartSequence()
-    {
+    public void StartSequence() {
         sequencePlayTime = 0f;
         currSequenceElement = 0;
+        sequenceUltimated = false;
 
         //        Destra, Sinistra, Entrambe
 
@@ -67,43 +62,37 @@ public class PlayerController : MonoBehaviour
         //DIFFICILI: ESDEDE - DSEDSD - DESEEE * -ESDSDD - SSDSEE
         //DIFFICILI ^ 2: EESDE DSD -SEDE EDDS
 
-        if (CurrentSequence == 0)
-        {
+        if (CurrentSequence == 0) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
         }
-        else if (CurrentSequence == 1)
-        {
+        else if (CurrentSequence == 1) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
             currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
         }
-        else if (CurrentSequence == 2)
-        {
+        else if (CurrentSequence == 2) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[2].Set(TransmissionElement.Types.Both, LONG_PRESSION_TIME);
         }
-        else if (CurrentSequence == 3)
-        {
+        else if (CurrentSequence == 3) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
             currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
         }
-        else if (CurrentSequence == 4)
-        {
+        else if (CurrentSequence == 4) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
             currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
         }
-        else if (CurrentSequence == 5)
-        {
+        else if (CurrentSequence == 5) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
             currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
@@ -114,10 +103,8 @@ public class PlayerController : MonoBehaviour
         if (CurrentSequence > 5) CurrentSequence = 0;
     }
 
-    private void Awake()
-    {
-        for(int i=0; i<10;++i)
-        {
+    private void Awake() {
+        for (int i = 0; i < 10; ++i) {
             currSequence[i] = new TransmissionElement();
         }
     }
@@ -141,104 +128,73 @@ public class PlayerController : MonoBehaviour
         transform.position += Vector3.right * velocity * Time.deltaTime;
     }
 
-    void FixedUpdate()
-    {
-        if (nextSequenceTimer > 0)
-        {
-            nextSequenceTimer -= Time.fixedDeltaTime;
-            SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3} Sequenza {3} tra {4:n3} sec", player, latestScore, totalScore, CurrentSequence, nextSequenceTimer);
-            if (nextSequenceTimer < 0)
-            {
-                StartSequence();
-                SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore );
-            }
-                return;
-        }
-        // SetVibration should be sent in a slower rate.
-        // Set vibration according to triggers
-        if (sequencePlayTime >= 0f)
-        {
+    void FixedUpdate() {
+        if (sequencePlayTime >= 0f) {
             float leftRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Left || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
             float rightRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Right || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
-            if(sequencePlayTime < currSequence[currSequenceElement].duration)
+            if (sequencePlayTime < currSequence[currSequenceElement].duration)
                 GamePad.SetVibration((PlayerIndex)player, leftRumble, rightRumble);
             else
                 GamePad.SetVibration((PlayerIndex)player, 0, 0);
             sequencePlayTime += Time.fixedDeltaTime;
-            if (sequencePlayTime > currSequence[currSequenceElement].duration + 0.5f)
-            {
+            if (sequencePlayTime > currSequence[currSequenceElement].duration + 0.5f) {
                 currSequenceElement++;
-                if (currSequenceElement == currSequenceNumElement)
-                {
+                if (currSequenceElement == currSequenceNumElement) {
                     sequencePlayTime = -1f;
                     responsePlayTime = 0f;
                     currResponseElement = 0;
                 }
-                else
-                {
+                else {
                     sequencePlayTime = 0f;
                 }
             }
-        } 
-        else if(responsePlayTime >= 0f)
-        {
+        }
+        else if (responsePlayTime >= 0f) {
             responsePlayTime += Time.fixedDeltaTime;
 
             bool leftRumble = state.Triggers.Left > RUMBLE_TRIGGER;
             bool rightRumble = state.Triggers.Right > RUMBLE_TRIGGER;
             GamePad.SetVibration((PlayerIndex)player, state.Triggers.Left, state.Triggers.Right);
-            if (currSequence[currResponseElement].responseType == TransmissionElement.Types.None)
-            {
-                if (leftRumble || rightRumble)
-                {
+            if (currSequence[currResponseElement].responseType == TransmissionElement.Types.None) {
+                if (leftRumble || rightRumble) {
                     if (delayCheck < 0f && (leftRumble && prevState.Triggers.Left <= RUMBLE_TRIGGER || rightRumble && prevState.Triggers.Right <= RUMBLE_TRIGGER))
                         delayCheck = 0.15f;
-                    else if (delayCheck > 0f)
-                    {
+                    else if (delayCheck > 0f) {
                         delayCheck -= Time.fixedDeltaTime;
                     }
-                    else
-                    {
+                    else {
                         currSequence[currResponseElement].responseType = leftRumble && rightRumble ? TransmissionElement.Types.Both : leftRumble ? TransmissionElement.Types.Left : TransmissionElement.Types.Right;
                     }
                 }
             }
-            else if(currSequence[currResponseElement].responseType == TransmissionElement.Types.Left && (!leftRumble || rightRumble) ||
+            else if (currSequence[currResponseElement].responseType == TransmissionElement.Types.Left && (!leftRumble || rightRumble) ||
                 currSequence[currResponseElement].responseType == TransmissionElement.Types.Right && (leftRumble || !rightRumble) ||
-                currSequence[currResponseElement].responseType == TransmissionElement.Types.Both && (!leftRumble || !rightRumble))
-            {
+                currSequence[currResponseElement].responseType == TransmissionElement.Types.Both && (!leftRumble || !rightRumble)) {
                 SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
                 currSequence[currResponseElement].responseDuration = responsePlayTime;
                 currResponseElement++;
-                if (currResponseElement >= currSequenceNumElement)
-                {
+                if (currResponseElement >= currSequenceNumElement) {
                     latestScore = SequenceRatio();
-                    if(OnScorePoint != null)
-                        OnScorePoint(this, latestScore);
+                    sequenceUltimated = true;
                     totalScore += latestScore * 100f;
                     responsePlayTime = -1f;
-                    nextSequenceTimer = 2.0f;
                     GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
                 }
-                else
-                {
+                else {
                     responsePlayTime = 0f;
                 }
             }
         }
-        else
-        {
+        else {
             SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
             GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
         }
 
     }
 
-    public float SequenceRatio()
-    {
+    public float SequenceRatio() {
         float ratio = 0f;
-        for(int i= 0; i< currSequenceNumElement; ++i)
-        {
+        for (int i = 0; i < currSequenceNumElement; ++i) {
             ratio += (currSequence[i].type == currSequence[i].responseType ? 1f : 0f) * (1f - Mathf.Abs(currSequence[i].responseDuration - currSequence[i].duration) / currSequence[i].duration) / (float)currSequenceNumElement;
         }
 
@@ -277,35 +233,30 @@ public class PlayerController : MonoBehaviour
             case GameManager.Types.Yellow:
                 spriteRenderer.color = Color.yellow;
                 break;
-            //default:
-            //    spriteRenderer.color = Color.white;
-            //    break;
+                //default:
+                //    spriteRenderer.color = Color.white;
+                //    break;
 
         }
     }
 
     private void Fire() {
-        GameManager.Types type;
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        {
-            StartSequence();
-        }
-
         //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
-        //else if (prevState[0].Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
-        //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
-        //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
+        //else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
+        //else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
+        //else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
         //else { return; }
 
-
-        //if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
-        //    float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
-        //    if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
-        //    Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
-        //    projectile.Initialize(shield);
-        //    fireTime = fireDelay;
-        //}
-        //else if (fireTime > 0) { fireTime -= Time.deltaTime;}
+        if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
+            float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
+            if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
+            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
+            projectile.Initialize(shield);
+            fireTime = fireDelay;
+        }
+        else if (fireTime > 0) {
+            fireTime -= Time.deltaTime;
+        }
     }
 
     public void HandleHit(GameManager.Types HitType) {
