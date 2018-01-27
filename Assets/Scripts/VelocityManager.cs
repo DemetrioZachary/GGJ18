@@ -10,8 +10,6 @@ public class VelocityManager : MonoBehaviour
     [SerializeField]
     OffsetAnimator offAnimator;
 
-    private bool updateVel = false;
-
     private void Awake()
     {
         foreach(PlayerController pl in players)
@@ -22,7 +20,6 @@ public class VelocityManager : MonoBehaviour
 
     public void OnScorePoint(PlayerController sender, float latestScore)
     {
-        updateVel = true;
     }
 
     // Use this for initialization
@@ -31,10 +28,9 @@ public class VelocityManager : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(updateVel)
-        {
-            updateVel = false;
+	void Update ()
+    {
+        bool updateVel = true;
 
             PlayerController plMinScore = null;
             PlayerController plMaxScore = null;
@@ -46,6 +42,7 @@ public class VelocityManager : MonoBehaviour
                     plMaxScore = pl;
             }
 
+        { 
             if (plMaxScore.totalScore - plMinScore.totalScore > 0)
             {
                 foreach (PlayerController pl in players)

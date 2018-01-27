@@ -50,8 +50,6 @@ public class PlayerController : MonoBehaviour
 
     const float RUMBLE_TRIGGER = 0.7f;
 
-    private float nextSequenceTimer = 0;
-
     public void StartSequence()
     {
         sequencePlayTime = 0f;
@@ -143,19 +141,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (nextSequenceTimer > 0)
-        {
-            nextSequenceTimer -= Time.fixedDeltaTime;
-            SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3} Sequenza {3} tra {4:n3} sec", player, latestScore, totalScore, CurrentSequence, nextSequenceTimer);
-            if (nextSequenceTimer < 0)
-            {
-                StartSequence();
-                SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore );
-            }
-                return;
-        }
-        // SetVibration should be sent in a slower rate.
-        // Set vibration according to triggers
         if (sequencePlayTime >= 0f)
         {
             float leftRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Left || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
@@ -217,7 +202,6 @@ public class PlayerController : MonoBehaviour
                         OnScorePoint(this, latestScore);
                     totalScore += latestScore * 100f;
                     responsePlayTime = -1f;
-                    nextSequenceTimer = 2.0f;
                     GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
                 }
                 else
@@ -284,28 +268,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Fire() {
-        GameManager.Types type;
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        {
-            StartSequence();
-        }
+    private void Fire()
+    {
+        GameManager.Types type = GameManager.Types.None;
 
-        //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
-        //else if (prevState[0].Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
-        //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
-        //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
-        //else { return; }
-        //if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
-        //    float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
-        //    if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
-        //    Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
-        //    projectile.Initialize(shield);
-        //    fireTime = fireDelay;
-        //}
-        //else if (fireTime > 0) {
-        //    fireTime -= Time.deltaTime;
-        //}
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
+        else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
+        else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
+        else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
+        else { return; }
+
+        if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed)
+        {
+            float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
+            if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
+            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
+            projectile.Initialize(shield);
+            fireTime = fireDelay;
+        }
+        else if (fireTime > 0)
+        {
+            fireTime -= Time.deltaTime;
+        }
     }
 
     public void HandleHit(GameManager.Types HitType) {
