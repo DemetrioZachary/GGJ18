@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            SequenceFeedback.text = $"{SequenceRatio():P3}";
+            SequenceFeedback.text = string.Format("{0:P3}", SequenceRatio());
             GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
         }
 
@@ -205,5 +205,11 @@ public class PlayerController : MonoBehaviour {
         //else { return; }
         //Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity) as Projectile;
         //projectile.Initialize(player == 1 ? 1 : -1, type);
+    }
+
+    public void HandleHit(GameManager.Types HitType) {
+        if (HitType != shield) {
+            // TODO
+        }
     }
 }
