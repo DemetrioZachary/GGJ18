@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour {
         prevState[1] = state[1];
         state[1] = GamePad.GetState((PlayerIndex)teamMatePlayer);
 
-        Move();
+        //Move();
         SetShield();
         Fire();
     }
@@ -46,12 +46,12 @@ public class PlayerController : MonoBehaviour {
         GamePad.SetVibration((PlayerIndex)teamMatePlayer, state[0].Triggers.Left, state[0].Triggers.Right);
     }
 
-    private void Move() {
-        float yPos = Mathf.Sin(angle) * railLength / 2f;
-        transform.position = new Vector3(transform.position.x, yPos, 0);
-        angle += Time.deltaTime * speed;
-        if (Mathf.Abs(angle) >= Mathf.PI * 2) { angle = 0; }
-    }
+    //private void Move() {
+    //    float yPos = Mathf.Sin(angle) * railLength / 2f;
+    //    transform.position = new Vector3(transform.position.x, yPos, 0);
+    //    angle += Time.deltaTime * speed;
+    //    if (Mathf.Abs(angle) >= Mathf.PI * 2) { angle = 0; }
+    //}
 
     private void SetShield() {
         shield = GameManager.Types.None;
