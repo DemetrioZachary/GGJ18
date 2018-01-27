@@ -4,13 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using XInputDotNetPure;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
+    public delegate void ScorePointEventhandler(PlayerController sender, float latestScore);
+
+    public ScorePointEventhandler OnScorePoint;
+
     public int player;
     public float speed = 1;
     public float railLength = 10;
     public float angle = 0;
     public float fireDelay = 1;
     public Projectile projectilePrefab;
+
+    public float velocity = 0f;
 
     public TransmissionElement[] currSequence = new TransmissionElement[10];
     public int currSequenceNumElement;
@@ -28,7 +35,7 @@ public class PlayerController : MonoBehaviour {
     private float delayCheck = -1f;
 
     private float latestScore = 0f;
-    private float totalScore = 0f;
+    public float totalScore = 0f;
 
     public Text SequenceFeedback;
 
@@ -130,6 +137,8 @@ public class PlayerController : MonoBehaviour {
         //Move();
         SetShield();
         Fire();
+
+        transform.position += Vector3.right * velocity * Time.deltaTime;
     }
 
     void FixedUpdate()
@@ -204,6 +213,8 @@ public class PlayerController : MonoBehaviour {
                 if (currResponseElement >= currSequenceNumElement)
                 {
                     latestScore = SequenceRatio();
+                    if(OnScorePoint != null)
+                        OnScorePoint(this, latestScore);
                     totalScore += latestScore * 100f;
                     responsePlayTime = -1f;
                     nextSequenceTimer = 2.0f;
