@@ -25,6 +25,8 @@ public class PlayerController : MonoBehaviour {
     private float sequencePlayTime = -1f;
     private float responsePlayTime = -1f;
 
+    private float score = 0;
+
     public Text SequenceFeedback;
 
     GamePadState state;
@@ -35,6 +37,8 @@ public class PlayerController : MonoBehaviour {
     const float STANDARD_PRESSION_TIME = 1f;
     const float LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.5f;
     const float VERY_LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.75f;
+
+    private float nextSequenceTimer = 0;
 
     public void StartSequence()
     {
@@ -95,7 +99,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         CurrentSequence++;
-        if (CurrentSequence > 4) CurrentSequence = 0;
+        if (CurrentSequence > 5) CurrentSequence = 0;
     }
 
     private void Awake()
@@ -125,6 +129,17 @@ public class PlayerController : MonoBehaviour {
 
     void FixedUpdate()
     {
+        if (nextSequenceTimer > 0)
+        {
+            nextSequenceTimer -= Time.fixedDeltaTime;
+            SequenceFeedback.text = string.Format("Punteggio P{0} : {1:n3} Sequenza {2} tra {3:n3} sec", player, score, CurrentSequence, nextSequenceTimer);
+            if (nextSequenceTimer < 0)
+            {
+                StartSequence();
+                SequenceFeedback.text = string.Format("Punteggio P{0} : {1:n3}", player, score);
+            }
+                return;
+        }
         // SetVibration should be sent in a slower rate.
         // Set vibration according to triggers
         if (sequencePlayTime >= 0f)
@@ -155,20 +170,11 @@ public class PlayerController : MonoBehaviour {
         {
             responsePlayTime += Time.fixedDeltaTime;
 
-            bool leftRumble = state.Triggers.Left > 0.5f;
-            bool rightRumble = state.Triggers.Right > 0.5f;
+            bool leftRumble = state.Triggers.Left > 0.7f;
+            bool rightRumble = state.Triggers.Right > 0.7f;
             GamePad.SetVibration((PlayerIndex)player, state.Triggers.Left, state.Triggers.Right);
             if (currResponseElement == -1 || currSequence[currResponseElement].responseType == TransmissionElement.Types.None)
             {
-                if (currResponseElement == currSequenceNumElement)
-                {
-                    responsePlayTime = -1f;
-                }
-                else
-                {
-                    responsePlayTime = 0f;
-                }
-
                 if (leftRumble || rightRumble)
                 {
                     if(currResponseElement == -1)
@@ -181,11 +187,18 @@ public class PlayerController : MonoBehaviour {
                 currSequence[currResponseElement].responseType == TransmissionElement.Types.Right && (leftRumble || !rightRumble) ||
                 currSequence[currResponseElement].responseType == TransmissionElement.Types.Both && (!leftRumble || !rightRumble))
             {
+                float ratio = 0f;
+                SequenceFeedback.text = string.Format("Punteggio P{0}: {1:P3} - Totale : {2:n3}", player, ratio, score);
                 currSequence[currResponseElement].responseDuration = responsePlayTime;
                 currResponseElement++;
-                if (currResponseElement == currSequenceNumElement)
+                if (currResponseElement >= currSequenceNumElement)
                 {
+                    ratio = SequenceRatio();
+                    score += ratio  * 100f;
                     responsePlayTime = -1f;
+                    nextSequenceTimer = 2.0f;
+                    GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
+                    SequenceFeedback.text = string.Format("Punteggio P{0}: {1:P3} - Totale : {2:n3}", player, ratio, score);
                 }
                 else
                 {
@@ -195,7 +208,7 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            SequenceFeedback.text = string.Format("{0:P3}", SequenceRatio());
+            SequenceFeedback.text = string.Format("Punteggio P{0}: {1:P3} - Totale : {2:n3}",player, SequenceRatio(), score);
             GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
         }
 
