@@ -255,7 +255,7 @@ Prefab:
     - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
         type: 2}
       propertyPath: player
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
         type: 2}
@@ -663,6 +663,11 @@ Prefab:
       propertyPath: SequenceFeedback
       value: 
       objectReference: {fileID: 1062304972}
+    - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
+        type: 2}
+      propertyPath: player
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44355343aa0402c4ba639c90b5470bd1, type: 2}
   m_IsPrefabParent: 0

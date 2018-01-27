@@ -10,12 +10,11 @@ public class VelocityManager : MonoBehaviour
     [SerializeField]
     OffsetAnimator offAnimator;
 
+    private float deltaSequence;
+
     private void Awake()
     {
-        foreach(PlayerController pl in players)
-        {
-            pl.OnScorePoint += OnScorePoint;
-        }
+        deltaSequence = Random.Range(5f, 7f);
     }
 
     public void OnScorePoint(PlayerController sender, float latestScore)
@@ -30,25 +29,42 @@ public class VelocityManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        bool updateVel = true;
-
-            PlayerController plMinScore = null;
-            PlayerController plMaxScore = null;
-            foreach (PlayerController pl in players)
+        if(deltaSequence > 0f)
+        {
+            deltaSequence -= Time.deltaTime;
+            if(deltaSequence < 0f)
             {
-                if (plMinScore == null || pl.totalScore < plMinScore.totalScore)
-                    plMinScore = pl;
-                if (plMaxScore == null || pl.totalScore > plMaxScore.totalScore)
-                    plMaxScore = pl;
-            }
-
-        { 
-            if (plMaxScore.totalScore - plMinScore.totalScore > 0)
-            {
+                deltaSequence = Random.Range(8f, 10f);
                 foreach (PlayerController pl in players)
                 {
-                    pl.velocity += 0.2f * (pl.totalScore - plMinScore.totalScore) / (plMaxScore.totalScore - plMinScore.totalScore);
+                    pl.StartSequence();
                 }
+            }
+        }
+        bool updateVel = true;
+
+        PlayerController plMinScore = null;
+        PlayerController plMaxScore = null;
+        foreach (PlayerController pl in players)
+        {
+            if (pl.gameObject.activeSelf)
+            {
+                if (plMinScore == null || pl.latestScore < plMinScore.latestScore)
+                    plMinScore = pl;
+                if (plMaxScore == null || pl.latestScore > plMaxScore.latestScore)
+                    plMaxScore = pl;
+
+                if (!pl.sequenceUltimated)
+                    updateVel = false;
+            }
+        }
+
+        if (updateVel && (plMaxScore.latestScore - plMinScore.latestScore) > 0)
+        {
+            foreach (PlayerController pl in players)
+            {
+                pl.sequenceUltimated = false;
+                pl.velocity += 0.2f * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
             }
         }
     }

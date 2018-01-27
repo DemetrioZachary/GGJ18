@@ -6,10 +6,6 @@ using XInputDotNetPure;
 
 public class PlayerController : MonoBehaviour
 {
-    public delegate void ScorePointEventhandler(PlayerController sender, float latestScore);
-
-    public ScorePointEventhandler OnScorePoint;
-
     public int player;
     public float speed = 1;
     public float railLength = 10;
@@ -34,8 +30,10 @@ public class PlayerController : MonoBehaviour
 
     private float delayCheck = -1f;
 
-    private float latestScore = 0f;
+    public float latestScore = 0f;
     public float totalScore = 0f;
+
+    public bool sequenceUltimated;
 
     public Text SequenceFeedback;
 
@@ -54,6 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         sequencePlayTime = 0f;
         currSequenceElement = 0;
+        sequenceUltimated = false;
 
         //        Destra, Sinistra, Entrambe
 
@@ -198,8 +197,7 @@ public class PlayerController : MonoBehaviour
                 if (currResponseElement >= currSequenceNumElement)
                 {
                     latestScore = SequenceRatio();
-                    if(OnScorePoint != null)
-                        OnScorePoint(this, latestScore);
+                    sequenceUltimated = true;
                     totalScore += latestScore * 100f;
                     responsePlayTime = -1f;
                     GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
