@@ -4,35 +4,40 @@ using UnityEngine;
 
 public class Bomb : MonoBehaviour {
 
-    public float acceleration = 5;
+    public float speed = 7;
+    public GameObject bombBase;
+
+    private bool triggered = false;
+    private Vector3 velocity = Vector3.zero;
+    private float angle = 0;
+    private Vector3 startPosition;
 
     private GameManager.Types type = GameManager.Types.Green;
 
-	void Start () {
-		
-	}
-	
-	void Update () {
-		
-	}
+    void Start() {
+        startPosition = transform.position;
+    }
+
+    void Update() {
+        transform.position = new Vector3(startPosition.x + Mathf.Sin(angle) / 2f, transform.position.y, transform.position.z);
+        angle += Time.deltaTime;
+        if (angle >= 2 * Mathf.PI) { angle = 0; }
+
+        if (triggered) {
+            transform.Translate(Vector3.SmoothDamp(Vector3.zero, Vector3.up * speed, ref velocity, 1f));
+        }
+    }
 
     private void OnCollisionEnter2D(Collision2D coll) {
-        if (coll.gameObject.CompareTag("Projectile")) {
-            SetBombType(coll.gameObject.GetComponent<Projectile>().GetProjectileType());
-            EngageBomb();
-        }
-        else if (coll.gameObject.CompareTag("Player")) {
-            // TODO hit player
+        if (coll.gameObject.CompareTag("Player")) {
+            coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
         }
     }
 
-    private void SetBombType(GameManager.Types type) {
+    public void TriggerBomb(GameManager.Types type) {
         this.type = type;
-        // TODO change asset
-    }
-
-    private void EngageBomb() {
-        // TODO sganciare vincolo
-        GetComponent<Rigidbody2D>().AddForce(new Vector2(0, acceleration));
+        // TODO change color
+        Destroy(bombBase);
+        triggered = true;
     }
 }

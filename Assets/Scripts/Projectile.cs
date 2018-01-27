@@ -6,7 +6,6 @@ public class Projectile : MonoBehaviour {
 
     public float speed = 3;
 
-    private int direction = 1;
     private GameManager.Types type;
     private SpriteRenderer spriteRenderer;
 
@@ -15,13 +14,13 @@ public class Projectile : MonoBehaviour {
     }
 
     private void Update() {
-        transform.Translate(new Vector3(speed * direction * Time.deltaTime, 0, 0));
+        transform.Translate(speed * Vector3.right * Time.deltaTime);
     }
 
     public GameManager.Types GetProjectileType() { return type; }
 
-    public void Initialize(int direction, GameManager.Types type) {
-        this.direction = direction;
+    public void Initialize(GameManager.Types type) {
+        
         this.type = type;
         switch (type) {
             case GameManager.Types.Green:
@@ -36,6 +35,15 @@ public class Projectile : MonoBehaviour {
             case GameManager.Types.Yellow:
                 spriteRenderer.color = Color.yellow;
                 break;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D coll) {
+        if (coll.CompareTag("Player")) {
+            coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
+        }
+        else if (coll.gameObject.CompareTag("Bomb")) {
+            coll.gameObject.GetComponent<Bomb>().TriggerBomb(type);
         }
     }
 }
