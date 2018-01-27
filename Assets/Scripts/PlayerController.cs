@@ -208,7 +208,6 @@ public class PlayerController : MonoBehaviour {
                     responsePlayTime = -1f;
                     nextSequenceTimer = 2.0f;
                     GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
-                    
                 }
                 else
                 {
