@@ -83,11 +83,13 @@ MonoBehaviour:
   speed: 1
   railLength: 20
   angle: 0
+  fireDelay: 1
   projectilePrefab: {fileID: 114692693575717568, guid: c43a01a10f23fb748980c17e7c77c931,
     type: 2}
   currSequenceNumElement: 0
   currSequenceElement: 0
   currResponseElement: 0
+  SequenceFeedback: {fileID: 0}
 --- !u!114 &114182005820453736
 MonoBehaviour:
   m_ObjectHideFlags: 1
