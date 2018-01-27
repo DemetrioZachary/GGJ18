@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour {
     public float speed = 1;
     public float railLength = 10;
     public float angle = 0;
+    public float fireDelay = 1;
     public Projectile projectilePrefab;
 
     public TransmissionElement[] currSequence = new TransmissionElement[10];
@@ -19,6 +20,7 @@ public class PlayerController : MonoBehaviour {
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
     private SpriteRenderer spriteRenderer;
+    private float fireTime = 0;
 
     private float sequencePlayTime = -1f;
     private float responsePlayTime = -1f;
@@ -160,7 +162,7 @@ public class PlayerController : MonoBehaviour {
     //}
 
     private void SetShield() {
-        shield = GameManager.Types.None;
+        //shield = GameManager.Types.None;
         //if (prevState.DPad.Down == ButtonState.Released && state.DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
         //else if(prevState.DPad.Right == ButtonState.Released && state.DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
         //else if (prevState.DPad.Left == ButtonState.Released && state.DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
@@ -192,19 +194,27 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Fire() {
-        GameManager.Types type;
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        {
-            StartSequence();
-        }
+        //GameManager.Types type;
+        //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        //{
+        //    StartSequence();
+        //}
 
         //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
         //else if (prevState[0].Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
         //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
         //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
         //else { return; }
-        //Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.identity) as Projectile;
-        //projectile.Initialize(player == 1 ? 1 : -1, type);
+        if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
+            float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
+            if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
+            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
+            projectile.Initialize(shield);
+            fireTime = fireDelay;
+        }
+        else if (fireTime > 0) {
+            fireTime -= Time.deltaTime;
+        }
     }
 
     public void HandleHit(GameManager.Types HitType) {
