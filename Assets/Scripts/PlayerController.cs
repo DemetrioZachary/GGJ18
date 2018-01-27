@@ -30,6 +30,74 @@ public class PlayerController : MonoBehaviour {
     GamePadState state;
     GamePadState prevState;
 
+    private int CurrentSequence = 0;
+
+    const float STANDARD_PRESSION_TIME = 1f;
+    const float LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.5f;
+    const float VERY_LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.75f;
+
+    public void StartSequence()
+    {
+        sequencePlayTime = 0f;
+        currSequenceElement = 0;
+
+        //        Destra, Sinistra, Entrambe
+
+        //* = La pressione del tasto dura di più(+50 %)
+        //** = +75 %
+        //(Lo spazio tra i due asterischi è perchè sennò fanno casino qui su discord, non ci sono stacchi nelle sequenze)
+        //FACILI: DDS - DSD - DDE * -EDE - ESE - SSD
+        //NORMALI: EDSE - SDED - SSED - SEED - DDES - SEDE - DSSD - DESDE - SSDSE
+        //DIFFICILI: ESDEDE - DSEDSD - DESEEE * -ESDSDD - SSDSEE
+        //DIFFICILI ^ 2: EESDE DSD -SEDE EDDS
+
+        if (CurrentSequence == 0)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+        }
+        else if (CurrentSequence == 1)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+        }
+        else if (CurrentSequence == 2)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Both, LONG_PRESSION_TIME);
+        }
+        else if (CurrentSequence == 3)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+        }
+        else if (CurrentSequence == 4)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+        }
+        else if (CurrentSequence == 5)
+        {
+            currSequenceNumElement = 3;
+            currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+        }
+
+        CurrentSequence++;
+        if (CurrentSequence > 4) CurrentSequence = 0;
+    }
+
     private void Awake()
     {
         for(int i=0; i<10;++i)
@@ -63,9 +131,12 @@ public class PlayerController : MonoBehaviour {
         {
             float leftRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Left || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
             float rightRumble = currSequence[currSequenceElement].type == TransmissionElement.Types.Right || currSequence[currSequenceElement].type == TransmissionElement.Types.Both ? 1.0f : 0f;
-            GamePad.SetVibration((PlayerIndex)player, leftRumble, rightRumble);
+            if(sequencePlayTime < currSequence[currSequenceElement].duration)
+                GamePad.SetVibration((PlayerIndex)player, leftRumble, rightRumble);
+            else
+                GamePad.SetVibration((PlayerIndex)player, 0, 0);
             sequencePlayTime += Time.fixedDeltaTime;
-            if (sequencePlayTime > currSequence[currSequenceElement].duration)
+            if (sequencePlayTime > currSequence[currSequenceElement].duration + 0.5f)
             {
                 currSequenceElement++;
                 if (currSequenceElement == currSequenceNumElement)
@@ -130,19 +201,6 @@ public class PlayerController : MonoBehaviour {
 
     }
 
-    public void StartSequence()
-    {
-        sequencePlayTime = 0f;
-        currSequenceElement = 0;
-
-        currSequenceNumElement = 3;
-        currSequence[0].Set(TransmissionElement.Types.Left, 2f);
-        currSequence[1].Set(TransmissionElement.Types.Right, 1.5f);
-        currSequence[2].Set(TransmissionElement.Types.Left, 2f);
-        //currSequence[3].Set(TransmissionElement.Types.Right, 1f);
-        //currSequence[4].Set(TransmissionElement.Types.Left, 1.5f);
-    }
-
     public float SequenceRatio()
     {
         float ratio = 0f;
@@ -194,27 +252,27 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void Fire() {
-        //GameManager.Types type;
-        //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
-        //{
-        //    StartSequence();
-        //}
+        GameManager.Types type;
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed)
+        {
+            StartSequence();
+        }
 
         //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
         //else if (prevState[0].Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
         //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
         //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
         //else { return; }
-        if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
-            float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
-            if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
-            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
-            projectile.Initialize(shield);
-            fireTime = fireDelay;
-        }
-        else if (fireTime > 0) {
-            fireTime -= Time.deltaTime;
-        }
+        //if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
+        //    float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
+        //    if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
+        //    Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
+        //    projectile.Initialize(shield);
+        //    fireTime = fireDelay;
+        //}
+        //else if (fireTime > 0) {
+        //    fireTime -= Time.deltaTime;
+        //}
     }
 
     public void HandleHit(GameManager.Types HitType) {
