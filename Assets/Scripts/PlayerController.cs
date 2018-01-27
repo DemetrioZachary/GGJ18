@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using XInputDotNetPure;
 
 public class PlayerController : MonoBehaviour {
@@ -21,6 +22,8 @@ public class PlayerController : MonoBehaviour {
 
     private float sequencePlayTime = -1f;
     private float responsePlayTime = -1f;
+
+    public Text SequenceFeedback;
 
     GamePadState state;
     GamePadState prevState;
@@ -84,6 +87,15 @@ public class PlayerController : MonoBehaviour {
             GamePad.SetVibration((PlayerIndex)player, state.Triggers.Left, state.Triggers.Right);
             if (currResponseElement == -1 || currSequence[currResponseElement].responseType == TransmissionElement.Types.None)
             {
+                if (currResponseElement == currSequenceNumElement)
+                {
+                    responsePlayTime = -1f;
+                }
+                else
+                {
+                    responsePlayTime = 0f;
+                }
+
                 if (leftRumble || rightRumble)
                 {
                     if(currResponseElement == -1)
@@ -98,11 +110,19 @@ public class PlayerController : MonoBehaviour {
             {
                 currSequence[currResponseElement].responseDuration = responsePlayTime;
                 currResponseElement++;
-                responsePlayTime = 0f;
+                if (currResponseElement == currSequenceNumElement)
+                {
+                    responsePlayTime = -1f;
+                }
+                else
+                {
+                    responsePlayTime = 0f;
+                }
             }
         }
         else
         {
+            SequenceFeedback.text = $"{SequenceRatio():P3}";
             GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
         }
 
@@ -113,7 +133,7 @@ public class PlayerController : MonoBehaviour {
         sequencePlayTime = 0f;
         currSequenceElement = 0;
 
-        currSequenceNumElement = 5;
+        currSequenceNumElement = 3;
         currSequence[0].Set(TransmissionElement.Types.Left, 2f);
         currSequence[1].Set(TransmissionElement.Types.Right, 1.5f);
         currSequence[2].Set(TransmissionElement.Types.Left, 2f);
@@ -126,7 +146,7 @@ public class PlayerController : MonoBehaviour {
         float ratio = 0f;
         for(int i= 0; i< currSequenceNumElement; ++i)
         {
-            ratio += (currSequence[i].type == currSequence[i].responseType ? 0f : 1f) * (1f - Mathf.Abs(currSequence[i].responseDuration - currSequence[i].duration)) / (float)currSequenceNumElement;
+            ratio += (currSequence[i].type == currSequence[i].responseType ? 1f : 0f) * (1f - Mathf.Abs(currSequence[i].responseDuration - currSequence[i].duration) / currSequence[i].duration) / (float)currSequenceNumElement;
         }
 
         return ratio;
