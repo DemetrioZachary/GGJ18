@@ -66,9 +66,9 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Pause:
                 Time.timeScale = 1;
-                pauseMenu.DOAnchorPosY(1200, 0.5f).OnComplete(() => { pauseMenu.gameObject.SetActive(false);
+                pauseMenu.DOAnchorPosY(1200, 0.3f).OnComplete(() => { pauseMenu.gameObject.SetActive(false);
                     if (newState == State.Game) { state = newState; }
-                    else { StartState(newState); } });
+                    else { /* Stop game */ StartState(newState); } });
                 break;
             case State.GameOver:
                 gameOverScreen.DOAnchorPosY(1200, 1).OnComplete(() => { gameOverScreen.gameObject.SetActive(false); StartState(newState); });
@@ -95,7 +95,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);
-                pauseMenu.DOAnchorPosY(0, 0.5f).OnComplete(() => { Time.timeScale = 0; });
+                pauseMenu.DOAnchorPosY(0, 0.3f).OnComplete(() => { Time.timeScale = 0; });
                 break;
             case State.GameOver:
                 gameOverScreen.gameObject.SetActive(true);
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour {
     }// ------------------------------------------------------------------
     
     public void Resume() {
-
+        ChangeState(State.Game);
     }
 
     public void StartGame() {

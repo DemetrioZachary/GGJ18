@@ -296,6 +296,8 @@ public class PlayerController : MonoBehaviour
         //else if (prevState[0].Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
         //else if (prevState[0].Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
         //else { return; }
+
+
         //if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
         //    float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
         //    if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
@@ -303,9 +305,7 @@ public class PlayerController : MonoBehaviour
         //    projectile.Initialize(shield);
         //    fireTime = fireDelay;
         //}
-        //else if (fireTime > 0) {
-        //    fireTime -= Time.deltaTime;
-        //}
+        //else if (fireTime > 0) { fireTime -= Time.deltaTime;}
     }
 
     public void HandleHit(GameManager.Types HitType) {
