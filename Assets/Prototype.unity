@@ -168,7 +168,12 @@ Prefab:
     - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
         type: 2}
       propertyPath: teamMatePlayer
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
+        type: 2}
+      propertyPath: player
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44355343aa0402c4ba639c90b5470bd1, type: 2}
@@ -372,7 +377,7 @@ Prefab:
     - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
         type: 2}
       propertyPath: player
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_Materials.Array.data[0]
@@ -386,7 +391,7 @@ Prefab:
     - target: {fileID: 114089933414477394, guid: 44355343aa0402c4ba639c90b5470bd1,
         type: 2}
       propertyPath: teamMatePlayer
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 44355343aa0402c4ba639c90b5470bd1, type: 2}

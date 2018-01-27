@@ -29,8 +29,9 @@ public class PlayerController : MonoBehaviour {
     void Update() {
 
         prevState[0] = state[0];
-        prevState[1] = state[1];
         state[0] = GamePad.GetState((PlayerIndex)player);
+
+        prevState[1] = state[1];
         state[1] = GamePad.GetState((PlayerIndex)teamMatePlayer);
 
         Move();
@@ -54,10 +55,15 @@ public class PlayerController : MonoBehaviour {
 
     private void SetShield() {
         shield = GameManager.Types.None;
-        if (prevState[1].DPad.Down == ButtonState.Released && state[1].DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
-        else if(prevState[1].DPad.Right == ButtonState.Released && state[1].DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
-        else if (prevState[1].DPad.Left == ButtonState.Released && state[1].DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
-        else if (prevState[1].DPad.Up == ButtonState.Released && state[1].DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
+        //if (prevState[1].DPad.Down == ButtonState.Released && state[1].DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
+        //else if(prevState[1].DPad.Right == ButtonState.Released && state[1].DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
+        //else if (prevState[1].DPad.Left == ButtonState.Released && state[1].DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
+        //else if (prevState[1].DPad.Up == ButtonState.Released && state[1].DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
+
+        if (prevState[1].Buttons.A == ButtonState.Released && state[1].Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
+        else if (prevState[1].Buttons.B == ButtonState.Released && state[1].Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
+        else if (prevState[1].Buttons.X == ButtonState.Released && state[1].Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
+        else if (prevState[1].Buttons.Y == ButtonState.Released && state[1].Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
         switch (shield) {
             case GameManager.Types.Green:
