@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraPosZ:
-  - 0
+  - -25
   - -25
   - -30
   - -40

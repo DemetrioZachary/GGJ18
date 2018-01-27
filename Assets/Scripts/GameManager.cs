@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour {
 
     public enum Types { None, Green, Red, Blue, Yellow };
 
+    public 
+
     // Use this for initialization
     void Start() {
 

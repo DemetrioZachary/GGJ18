@@ -39,8 +39,8 @@ public class CameraController : MonoBehaviour {
             }
         }
         float range = Mathf.Abs(transform.position.z * Mathf.Tan(fov));
-        if (maxX - minX < range - 2 * headOffset) {
-            targetPosition = new Vector3(minX + range / 2f - headOffset, targetPosition.y, targetPosition.z);
+        if (maxX - minX < range - headOffset) {
+            targetPosition = new Vector3(minX + range / 2f - 2 * headOffset, targetPosition.y, targetPosition.z);
         }
         else {
             targetPosition = new Vector3(maxX - range / 2f + headOffset, targetPosition.y, targetPosition.z);
@@ -56,6 +56,6 @@ public class CameraController : MonoBehaviour {
 
     public void UpdatePlayers() {
         players = FindObjectsOfType<PlayerController>();
-        targetPosition = new Vector3(targetPosition.x, players.Length == 3 ? -5 : 0, cameraPosZ[players.Length - 1]);
+        targetPosition = new Vector3(targetPosition.x, players.Length % 2 == 0 ? 0 : -5, cameraPosZ[players.Length - 1]);
     }
 }

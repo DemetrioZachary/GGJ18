@@ -18,6 +18,8 @@ public class Projectile : MonoBehaviour {
         transform.Translate(new Vector3(speed * direction * Time.deltaTime, 0, 0));
     }
 
+    public GameManager.Types GetProjectileType() { return type; }
+
     public void Initialize(int direction, GameManager.Types type) {
         this.direction = direction;
         this.type = type;
