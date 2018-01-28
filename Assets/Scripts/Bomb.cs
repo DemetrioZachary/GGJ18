@@ -1,37 +1,39 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
-public class Bomb : MonoBehaviour {
+public class Bomb : MonoBehaviour
+{
 
-    public float speed = 7;
+    public float minTime = 8;
+    public float maxTime = 10;
     public GameObject bombBase, bombBody;
     public ParticleSystem pulse, explosion;
 
-    private bool triggered = false;
-    private Vector3 velocity = Vector3.zero;
-
     private GameManager.Types type = GameManager.Types.Green;
 
-    void Start() {
+    void Start()
+    {
 
     }
 
-    void Update() {
-        if (triggered) {
-            transform.Translate(Vector3.SmoothDamp(Vector3.zero, Vector3.up * speed, ref velocity, 1f));
-        }
+    void Update()
+    {
     }
 
-    private void OnCollisionEnter2D(Collision2D coll) {
-        if (coll.gameObject.CompareTag("Player")) {
+    private void OnCollisionEnter2D(Collision2D coll)
+    {
+        if (coll.gameObject.CompareTag("Player"))
+        {
             coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
 
-            
+
         }
     }
 
-    private IEnumerator Detonate() {
+    private IEnumerator Detonate()
+    {
         pulse.Stop();
         explosion.Play();
         Destroy(bombBody.gameObject);
@@ -40,10 +42,12 @@ public class Bomb : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void TriggerBomb(GameManager.Types type) {
+    public void TriggerBomb(GameManager.Types type)
+    {
         this.type = type;
         ParticleSystem.MainModule main = pulse.main;
-        switch (type) {
+        switch (type)
+        {
             case GameManager.Types.Green:
                 main.startColor = Color.green;
                 break;
@@ -57,10 +61,8 @@ public class Bomb : MonoBehaviour {
                 main.startColor = Color.yellow;
                 break;
         }
-        if (!triggered) {
-            Destroy(bombBase);
-            triggered = true;
-            pulse.Play();
-        }
+        Destroy(bombBase);
+        transform.DOMoveY(transform.position.y < 0 ? 18 : -18, Random.Range(minTime, maxTime));
+        pulse.Play();
     }
 }

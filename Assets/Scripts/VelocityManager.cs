@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Lean.Pool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,42 @@ public class VelocityManager : MonoBehaviour
 
     private float deltaSequence;
 
+    public GameObject BombAir;
+    public GameObject BombWater;
+
+    // This stores all spawned prefabs, so they can be despawned later
+    private Stack<GameObject> spawnedPrefabs = new Stack<GameObject>();
+
+    public void SpawnBomb()
+    {
+        bool isAir = Random.value > 0.5f;
+        float yPos = isAir ? (Random.value > 0.5f ? 6 : 8) : (Random.value > 0.5f ? -10 : -12);
+
+        var clone = LeanPool.Spawn(isAir ? BombAir : BombWater, Vector3.right * 30f + Vector3.up * yPos, Quaternion.identity, null);
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(clone.transform.DOMoveX(-30, Random.Range(40f, 45f)))
+            .Join(clone.transform.DOShakePosition(5,0.2f,1).SetLoops(-1, LoopType.Yoyo));
+
+        // Add the clone to the clones stack if it doesn't exist
+        // If this prefab can be recycled then it could already exist
+        if (spawnedPrefabs.Contains(clone) == false)
+        {
+            spawnedPrefabs.Push(clone);
+        }
+    }
+
+    public void DespawnPrefab()
+    {
+        if (spawnedPrefabs.Count > 0)
+        {
+            // Get the last clone
+            var clone = spawnedPrefabs.Pop();
+
+            // Despawn it
+            LeanPool.Despawn(clone);
+        }
+    }
+
     private void Awake()
     {
     }
@@ -31,7 +68,7 @@ public class VelocityManager : MonoBehaviour
     {
         // Randomizzo la scelta del modello di dirimarino
         int[] rndIdx = { 0, 1, 2, 3 };
-        for(int i= 0; i< 10; ++i)
+        for (int i = 0; i < 10; ++i)
         {
             int swapf = Random.Range(0, 3);
             int swapt = Random.Range(0, 3);
@@ -50,7 +87,10 @@ public class VelocityManager : MonoBehaviour
 
                 pl.SetPlayerNumber(i);
                 if (pl.transform.position.y > 0f)
+                {
                     pl.transform.Rotate(Vector3.right, 180f);
+                    pl.bubblesPs.Stop();
+                }
                 pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnUpdate(() => GamePad.SetVibration((PlayerIndex)i, 1f, 1f));
 
                 players.Add(pl);
@@ -118,13 +158,24 @@ public class VelocityManager : MonoBehaviour
         if (updateVel)
         {
             deltaSequence = Random.Range(4f, 6f);
+            SpawnBomb();
             foreach (PlayerController pl in players)
             {
                 if (pl.gameObject.activeSelf)
                 {
                     pl.sequenceUltimated = false;
-                    if ((plMaxScore.latestScore - plMinScore.latestScore) > 0)
-                        pl.speed += 0.2f * (plMaxScore.transform.position.x > pl.transform.position.x ? -1 : 1) * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
+                    float deltaScore = (plMaxScore.latestScore - plMinScore.latestScore);
+                    if (deltaScore > 0)
+                    {
+                        if (plMaxScore.transform.position.x > 10)
+                        {
+                            pl.speed -= 0.2f * (plMaxScore.latestScore - pl.latestScore) / deltaScore;
+                        }
+                        else
+                        {
+                            pl.speed += 0.2f * (pl.latestScore - plMinScore.latestScore) / deltaScore;
+                        }
+                    }
                 }
             }
 
@@ -146,7 +197,7 @@ public class VelocityManager : MonoBehaviour
                 }
             }
 
-            offAnimator.Speed += speedForBck*0.1f;
+            offAnimator.Speed += speedForBck * 0.1f;
         }
 
         // Swap dei binari e impostazione del livello
