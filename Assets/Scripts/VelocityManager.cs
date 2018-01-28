@@ -34,7 +34,6 @@ public class VelocityManager : MonoBehaviour
             deltaSequence -= Time.deltaTime;
             if(deltaSequence < 0f)
             {
-                deltaSequence = Random.Range(8f, 10f);
                 foreach (PlayerController pl in players)
                 {
                     pl.StartSequence();
@@ -59,12 +58,14 @@ public class VelocityManager : MonoBehaviour
             }
         }
 
-        if (updateVel && (plMaxScore.latestScore - plMinScore.latestScore) > 0)
+        if (updateVel)
         {
+            deltaSequence = Random.Range(4f, 6f);
             foreach (PlayerController pl in players)
             {
                 pl.sequenceUltimated = false;
-                pl.velocity += 0.2f * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
+                if ((plMaxScore.latestScore - plMinScore.latestScore) > 0)
+                    pl.speed += 0.2f * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
             }
         }
     }
