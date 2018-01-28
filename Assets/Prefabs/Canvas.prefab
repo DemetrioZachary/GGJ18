@@ -107,7 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224121321767631324}
   - component: {fileID: 222326371829514400}
-  - component: {fileID: 114013592423738000}
+  - component: {fileID: 114058283526440890}
   m_Layer: 5
   m_Name: SplashScreen
   m_TagString: Untagged
@@ -143,6 +143,7 @@ GameObject:
   - component: {fileID: 224480645530112302}
   - component: {fileID: 222463665119033960}
   - component: {fileID: 114952210044078970}
+  - component: {fileID: 114414866364383968}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -194,7 +195,7 @@ GameObject:
   m_Component:
   - component: {fileID: 224664600742987256}
   - component: {fileID: 222505173424446970}
-  - component: {fileID: 114043236379773158}
+  - component: {fileID: 114805529783828436}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -471,6 +472,7 @@ GameObject:
   - component: {fileID: 224253137164632372}
   - component: {fileID: 222613233911281312}
   - component: {fileID: 114939873120863728}
+  - component: {fileID: 114409127157480730}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
@@ -531,32 +533,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &114013592423738000
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1284650682908590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0.102941155, b: 0.102941155, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!114 &114040174892060630
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -590,32 +566,33 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: PLAY AGAIN
---- !u!114 &114043236379773158
+--- !u!114 &114058283526440890
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1463586635651168}
+  m_GameObject: {fileID: 1284650682908590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.74264705, g: 0.74264705, b: 0.74264705, a: 0.272}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+  m_Sprite: {fileID: 21300000, guid: 4dcfa87b323914946b0502b6bb02bdc2, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
 --- !u!114 &114085216487318814
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1297,6 +1274,17 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &114409127157480730
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1953031107625170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39bd80888ba62f54db5952e8bbe96ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114412054419101654
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1349,6 +1337,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114414866364383968
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1312000513643040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39bd80888ba62f54db5952e8bbe96ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114416522804989054
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1772,6 +1771,17 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114805529783828436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1463586635651168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39bd80888ba62f54db5952e8bbe96ea4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114809471195259724
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2573,7 +2583,7 @@ RectTransform:
   m_GameObject: {fileID: 1795242846431266}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 224480645530112302}
   - {fileID: 224253137164632372}
