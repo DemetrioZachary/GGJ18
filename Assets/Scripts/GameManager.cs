@@ -127,6 +127,7 @@ public class GameManager : MonoBehaviour {
 
     public void StartNewGame(int playerNumber) {
        GetComponent<VelocityManager>().playerNumber = playerNumber;
+        GetComponentInChildren<CameraController>().CheckPlayers(playerNumber);
         ChangeState(State.Game);
 
     }

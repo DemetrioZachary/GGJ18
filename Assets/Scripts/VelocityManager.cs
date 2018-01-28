@@ -11,7 +11,7 @@ public class VelocityManager : MonoBehaviour
     public PlayerController[] playerPrefabs;
 
     private float[] startPositionsX = { -18, -22, -30 };
-    private float[] startPositionsY = { 5, -5, 15, -15 };
+    private float[] startPositionsY = { 6, -5, 16, -15 };
 
     [SerializeField]
     OffsetAnimator offAnimator;
@@ -29,27 +29,39 @@ public class VelocityManager : MonoBehaviour
 
     public IEnumerator SpawnPlayers()
     {
+        // Randomizzo la scelta del modello di dirimarino
+        int[] rndIdx = { 0, 1, 2, 3 };
+        for(int i= 0; i< 10; ++i)
+        {
+            int swapf = Random.Range(0, 3);
+            int swapt = Random.Range(0, 3);
+            int app = rndIdx[swapf];
+            rndIdx[swapf] = rndIdx[swapt];
+            rndIdx[swapt] = app;
+        }
+
         for (int i = 0; i < playerNumber; ++i)
         {
             PlayerIndex testPlayerIndex = (PlayerIndex)i;
             GamePadState testState = GamePad.GetState(testPlayerIndex);
-            if (testState.IsConnected) {
+            if (testState.IsConnected)
+            {
+                PlayerController pl = Instantiate(playerPrefabs[rndIdx[i]], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController;
 
-                PlayerController pl = Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController;
-                
                 pl.SetPlayerNumber(i);
-                GamePad.SetVibration((PlayerIndex)pl.player, 0.7f, 0.7f); // da solo un piccolo colpetto
-                pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnComplete(() => { GamePad.SetVibration((PlayerIndex)pl.player, 0, 0); });
+                if (pl.transform.position.y > 0f)
+                    pl.transform.Rotate(Vector3.right, 180f);
+                pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnUpdate(() => GamePad.SetVibration((PlayerIndex)i, 1f, 1f));
 
                 players.Add(pl);
             }
-            
+
             yield return new WaitForSeconds(3);
         }
         // TODO
         // Start spawn Bombs
         // Start Sequences
-        //deltaSequence = Random.Range(5f, 7f);
+        deltaSequence = Random.Range(5f, 7f);
     }
 
     public void StopGame()
@@ -62,9 +74,10 @@ public class VelocityManager : MonoBehaviour
     }
 
     // Use this for initialization
-    void Start () {
-		
-	}
+    void Start()
+    {
+
+    }
 
     // Update is called once per frame
     void Update()
@@ -114,18 +127,46 @@ public class VelocityManager : MonoBehaviour
                         pl.speed += 0.2f * (plMaxScore.transform.position.x > pl.transform.position.x ? -1 : 1) * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
                 }
             }
+
+            float speedForBck = float.MaxValue;
+            foreach (PlayerController pl in players)
+            {
+                if (pl.gameObject.activeSelf)
+                {
+                    if (speedForBck > pl.speed)
+                        speedForBck = pl.speed;
+                }
+            }
+
+            foreach (PlayerController pl in players)
+            {
+                if (pl.gameObject.activeSelf)
+                {
+                    pl.speed -= speedForBck;
+                }
+            }
+
+            offAnimator.Scale += speedForBck*0.1f;
         }
 
-        // Swap dei binari
+        // Swap dei binari e impostazione del livello
         foreach (PlayerController pl in players)
         {
             if (pl.gameObject.activeSelf)
             {
+                if (pl.transform.position.x < -10f)
+                    pl.CurrLevel = 0;
+                else if (pl.transform.position.x > 10f)
+                    pl.CurrLevel = 2;
+                else
+                    pl.CurrLevel = 1;
+
             }
         }
     }
 
-    public void SetPlayerList(List<PlayerController> players) { //<---
+    public void SetPlayerList(List<PlayerController> players)
+    { //<---
         this.players = players;
     }
 }

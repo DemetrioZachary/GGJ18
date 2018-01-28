@@ -7,6 +7,17 @@ public class OffsetAnimator : MonoBehaviour
     [SerializeField]
     private float scale = 0.2f;
 
+    public float Scale
+    {
+        get { return scale; }
+        set
+        {
+            scale = value;
+            for (int i = 0; i < transform.childCount; ++i)
+                transform.GetChild(i).GetComponent<OffsetAnimator>().Scale = value * 1.25f;
+        }
+    }
+
     private Vector2 offset = Vector2.zero;
 
     private MeshRenderer meshRnd = null;

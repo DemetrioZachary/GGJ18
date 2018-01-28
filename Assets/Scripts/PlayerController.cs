@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
 
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
-    private MeshRenderer meshRenderer;
+    //private MeshRenderer meshRenderer;
     private float fireTime = 0;
 
     private float sequencePlayTime = -1f;
@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour {
     public float latestScore = 0f;
     public float totalScore = 0f;
 
+    public int CurrLevel = 0;
+
     //public Text SequenceFeedback;
 
     GamePadState state;
@@ -37,7 +39,7 @@ public class PlayerController : MonoBehaviour {
 
     private int CurrentSequence = 0;
 
-    const float STANDARD_PRESSION_TIME = 1f;
+    const float STANDARD_PRESSION_TIME = 0.8f;
     const float LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.5f;
     const float VERY_LONG_PRESSION_TIME = STANDARD_PRESSION_TIME * 1.75f;
 
@@ -59,46 +61,189 @@ public class PlayerController : MonoBehaviour {
         //DIFFICILI: ESDEDE - DSEDSD - DESEEE * -ESDSDD - SSDSEE
         //DIFFICILI ^ 2: EESDE DSD -SEDE EDDS
 
-        CurrentSequence = Random.Range(0,5);
-        if (CurrentSequence == 0) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+        if(CurrLevel == 0)
+        {
+            CurrentSequence = Random.Range(0, 5);
+            if (CurrentSequence == 0)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 1)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 2)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, LONG_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 3)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 4)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 5)
+            {
+                currSequenceNumElement = 3;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
         }
-        else if (CurrentSequence == 1) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+        else if (CurrLevel == 1)
+        {
+            //NORMALI: EDSE - SDED - SSED - SEED - DDES - SEDE - DSSD - DESDE - SSDSE
+            CurrentSequence = Random.Range(0, 8);
+            if (CurrentSequence == 0)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 1)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 2)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 3)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 4)
+            {
+                //NORMALI: DDES - SEDE - DSSD - DESDE - SSDSE
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 5)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 6)
+            {
+                currSequenceNumElement = 4;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 7)
+            {
+                //NORMALI: DESDE - SSDSE
+                currSequenceNumElement = 5;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 8)
+            {
+                currSequenceNumElement = 5;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
         }
-        else if (CurrentSequence == 2) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Both, LONG_PRESSION_TIME);
+        else if (CurrLevel == 2)
+        {
+            //DIFFICILI: ESDEDE - DSEDSD - DESEEE * -ESDSDD - SSDSEE
+            CurrentSequence = Random.Range(0, 4);
+            if (CurrentSequence == 0)
+            {
+                currSequenceNumElement = 6;
+                currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[5].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 1)
+            {
+                currSequenceNumElement = 6;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[5].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 2)
+            {
+                currSequenceNumElement = 6;
+                currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Left, LONG_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[5].Set(TransmissionElement.Types.Both, LONG_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 3)
+            {
+                //DIFFICILI: ESDSDD - SSDSEE
+                currSequenceNumElement = 6;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[5].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+            }
+            else if (CurrentSequence == 4)
+            {
+                currSequenceNumElement = 6;
+                currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
+                currSequence[3].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
+                currSequence[4].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+                currSequence[5].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
+            }
         }
-        else if (CurrentSequence == 3) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
-        }
-        else if (CurrentSequence == 4) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Both, STANDARD_PRESSION_TIME);
-        }
-        else if (CurrentSequence == 5) {
-            currSequenceNumElement = 3;
-            currSequence[0].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
-            currSequence[1].Set(TransmissionElement.Types.Left, STANDARD_PRESSION_TIME);
-            currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
-        }
-
-        //CurrentSequence++;
-        //if (CurrentSequence > 5) CurrentSequence = 0;
     }
 
     private void Awake() {
@@ -108,8 +253,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        meshRenderer = GetComponentInChildren<MeshRenderer>();
-        meshRenderer.material.color = Color.green;
+        //meshRenderer = GetComponentInChildren<MeshRenderer>();
+        //meshRenderer.material.color = Color.green;
         inputStr = "P" + player;
     }
 
@@ -226,24 +371,24 @@ public class PlayerController : MonoBehaviour {
         else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
         else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
-        switch (shield) {
-            case GameManager.Types.Green:
-                meshRenderer.material.color = Color.green;
-                break;
-            case GameManager.Types.Red:
-                meshRenderer.material.color = Color.red;
-                break;
-            case GameManager.Types.Blue:
-                meshRenderer.material.color = Color.blue;
-                break;
-            case GameManager.Types.Yellow:
-                meshRenderer.material.color = Color.yellow;
-                break;
-                //default:
-                //    spriteRenderer.color = Color.white;
-                //    break;
+        //switch (shield) {
+        //    case GameManager.Types.Green:
+        //        meshRenderer.material.color = Color.green;
+        //        break;
+        //    case GameManager.Types.Red:
+        //        meshRenderer.material.color = Color.red;
+        //        break;
+        //    case GameManager.Types.Blue:
+        //        meshRenderer.material.color = Color.blue;
+        //        break;
+        //    case GameManager.Types.Yellow:
+        //        meshRenderer.material.color = Color.yellow;
+        //        break;
+        //        //default:
+        //        //    spriteRenderer.color = Color.white;
+        //        //    break;
 
-        }
+        //}
     }
 
     private void Fire() {

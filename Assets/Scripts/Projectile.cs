@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour {
 
-    public float speed = 3;
+    public float speed = 25;
 
     private GameManager.Types type;
     private SpriteRenderer spriteRenderer;
