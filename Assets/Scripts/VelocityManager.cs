@@ -25,30 +25,33 @@ public class VelocityManager : MonoBehaviour
     // This stores all spawned prefabs, so they can be despawned later
     private Stack<GameObject> spawnedPrefabs = new Stack<GameObject>();
 
-        public void SpawnPrefab()
+    public void SpawnBomb()
+    {
+        bool isAir = Random.value > 0.5f;
+        float yPos = isAir ? (Random.value > 0.5f ? 6 : 8) : (Random.value > 0.5f ? -10 : -12);
+
+        var clone = LeanPool.Spawn(isAir ? BombAir : BombWater, Vector3.right * 30f + Vector3.up * yPos, Quaternion.identity, null);
+        clone.transform.DOMoveX(-30, Random.Range(40f, 45f));
+
+        // Add the clone to the clones stack if it doesn't exist
+        // If this prefab can be recycled then it could already exist
+        if (spawnedPrefabs.Contains(clone) == false)
         {
-            var clone = LeanPool.Spawn(Random.value > 0.5f ? BombAir : BombWater, Vector3.right * 20f, Quaternion.identity, null);
-        clone.transform.DOMoveX(-20, 15f);
-
-            // Add the clone to the clones stack if it doesn't exist
-            // If this prefab can be recycled then it could already exist
-            if (spawnedPrefabs.Contains(clone) == false)
-            {
-                spawnedPrefabs.Push(clone);
-            }
+            spawnedPrefabs.Push(clone);
         }
+    }
 
-        public void DespawnPrefab()
+    public void DespawnPrefab()
+    {
+        if (spawnedPrefabs.Count > 0)
         {
-            if (spawnedPrefabs.Count > 0)
-            {
-                // Get the last clone
-                var clone = spawnedPrefabs.Pop();
+            // Get the last clone
+            var clone = spawnedPrefabs.Pop();
 
-                // Despawn it
-                LeanPool.Despawn(clone);
-            }
+            // Despawn it
+            LeanPool.Despawn(clone);
         }
+    }
 
     private void Awake()
     {
@@ -63,7 +66,7 @@ public class VelocityManager : MonoBehaviour
     {
         // Randomizzo la scelta del modello di dirimarino
         int[] rndIdx = { 0, 1, 2, 3 };
-        for(int i= 0; i< 10; ++i)
+        for (int i = 0; i < 10; ++i)
         {
             int swapf = Random.Range(0, 3);
             int swapt = Random.Range(0, 3);
@@ -82,7 +85,10 @@ public class VelocityManager : MonoBehaviour
 
                 pl.SetPlayerNumber(i);
                 if (pl.transform.position.y > 0f)
+                {
                     pl.transform.Rotate(Vector3.right, 180f);
+                    pl.bubblesPs.Stop();
+                }
                 pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnUpdate(() => GamePad.SetVibration((PlayerIndex)i, 1f, 1f));
 
                 players.Add(pl);
@@ -150,7 +156,7 @@ public class VelocityManager : MonoBehaviour
         if (updateVel)
         {
             deltaSequence = Random.Range(4f, 6f);
-            SpawnPrefab();
+            SpawnBomb();
             foreach (PlayerController pl in players)
             {
                 if (pl.gameObject.activeSelf)
@@ -189,7 +195,7 @@ public class VelocityManager : MonoBehaviour
                 }
             }
 
-            offAnimator.Speed += speedForBck*0.1f;
+            offAnimator.Speed += speedForBck * 0.1f;
         }
 
         // Swap dei binari e impostazione del livello

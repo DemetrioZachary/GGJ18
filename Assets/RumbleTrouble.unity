@@ -88,6 +88,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -569,12 +570,14 @@ Prefab:
         type: 2}
       propertyPath: BombAir
       value: 
-      objectReference: {fileID: 100000, guid: 081a1c1f6c6b76e4ba0118e1e614d990, type: 3}
+      objectReference: {fileID: 1072832362446134, guid: 8ceefd08c3fa336488c8767371e8b829,
+        type: 2}
     - target: {fileID: 114687802607995244, guid: 448b8a308780e854d83786f770643382,
         type: 2}
       propertyPath: BombWater
       value: 
-      objectReference: {fileID: 100002, guid: ae6fe838aba921a4da84248641fcce50, type: 3}
+      objectReference: {fileID: 1448545066153134, guid: abee2a4e3fa0bfa49a3aa50a2168e043,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 448b8a308780e854d83786f770643382, type: 2}
   m_IsPrefabParent: 0
