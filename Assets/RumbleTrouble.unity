@@ -88,7 +88,6 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaDirect: 0.5
     m_PVRFilteringAtrousPositionSigmaIndirect: 2
     m_PVRFilteringAtrousPositionSigmaAO: 1
-    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -127,11 +126,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4398289195376214, guid: e3bc5c6eded5f8e4ab56173306e19ad6, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -6.348527
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4398289195376214, guid: e3bc5c6eded5f8e4ab56173306e19ad6, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -4.99952
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4398289195376214, guid: e3bc5c6eded5f8e4ab56173306e19ad6, type: 2}
       propertyPath: m_LocalPosition.z
@@ -303,12 +302,12 @@ Prefab:
     - target: {fileID: 224756478119947976, guid: 1ceff4e8c506d5e40b5f2622a5788da8,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 224756478119947976, guid: 1ceff4e8c506d5e40b5f2622a5788da8,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 540
       objectReference: {fileID: 0}
     - target: {fileID: 224756478119947976, guid: 1ceff4e8c506d5e40b5f2622a5788da8,
         type: 2}
@@ -507,7 +506,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1062304970}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 559, y: -427, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 2.2222223}
   m_Children: []
   m_Father: {fileID: 997551962}
@@ -663,7 +662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3229b842cb4da7641b6b0cf74137b11a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splashTime: 5
+  splashTime: 3
   blackScreen: {fileID: 1388011098}
   splashScreen: {fileID: 1036161023}
   mainMenu: {fileID: 799989272}
@@ -702,6 +701,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54cf21485e52ac743a69baad6d1fe5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerNumber: 2
   offAnimator: {fileID: 403173712}
 --- !u!114 &2014320236 stripped
 MonoBehaviour:
@@ -733,7 +733,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2066839923}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -545, y: -428, z: 0}
   m_LocalScale: {x: 2.2222223, y: 2.2222223, z: 2.2222223}
   m_Children: []
   m_Father: {fileID: 997551962}

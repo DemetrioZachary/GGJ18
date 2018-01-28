@@ -9,7 +9,7 @@ public class VelocityManager : MonoBehaviour
     private List<PlayerController> players = new List<PlayerController>();
     public int playerNumber = 2;
 
-    private float[] startPositionsX = { -18, -22, -30 };
+    private float[] startPositionsX = { -12, -22, -30 };
     private float[] startPositionsY = { 5, -5, 15, -15 };
 
     [SerializeField]
@@ -30,7 +30,7 @@ public class VelocityManager : MonoBehaviour
             GamePadState testState = GamePad.GetState(testPlayerIndex);
             if (testState.IsConnected)
             {
-                GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
+                GamePad.SetVibration(testPlayerIndex, 1f, 1f);
                 players.Add(Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController);
                 players[i].transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)i, 0, 0); });
                 players[i].SetPlayerNumber(i);
@@ -40,7 +40,6 @@ public class VelocityManager : MonoBehaviour
         }
         // TODO
         // Start spawn Bombs
-        // Start Sequences
         GetComponent<VelocityManager>().StartSequences();
     }
 

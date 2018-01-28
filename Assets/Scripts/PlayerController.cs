@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour {
         if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
             float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
             if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
-            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI)) as Projectile;
+            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Clamp(Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI, -120, 120))) as Projectile;
             projectile.Initialize(shield);
             fireTime = fireDelay;
         }
