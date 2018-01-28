@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class VelocityManager : MonoBehaviour
 {
-    [SerializeField]
-    PlayerController[] players;
+    List<PlayerController> players = new List<PlayerController>();//<---
 
     [SerializeField]
     OffsetAnimator offAnimator;
@@ -33,6 +32,7 @@ public class VelocityManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (players.Count == 0) { return; }//<---
         if (deltaSequence > 0f)
         {
             deltaSequence -= Time.deltaTime;
@@ -42,7 +42,7 @@ public class VelocityManager : MonoBehaviour
                 {
                     if (pl.gameObject.activeSelf)
                     {
-                        //pl.StartSequence();
+                        pl.StartSequence();
                     }
                 }
             }
@@ -85,5 +85,9 @@ public class VelocityManager : MonoBehaviour
             {
             }
         }
+    }
+
+    public void SetPlayerList(List<PlayerController> players) { //<---
+        this.players = players;
     }
 }
