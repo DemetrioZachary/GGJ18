@@ -25,14 +25,14 @@ public class VelocityManager : MonoBehaviour
     void Start () {
 		
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
-        if(deltaSequence > 0f)
+        if (deltaSequence > 0f)
         {
             deltaSequence -= Time.deltaTime;
-            if(deltaSequence < 0f)
+            if (deltaSequence < 0f)
             {
                 foreach (PlayerController pl in players)
                 {
@@ -72,6 +72,13 @@ public class VelocityManager : MonoBehaviour
                     if ((plMaxScore.latestScore - plMinScore.latestScore) > 0)
                         pl.speed += 0.2f * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
                 }
+            }
+        }
+
+        foreach (PlayerController pl in players)
+        {
+            if (pl.gameObject.activeSelf)
+            {
             }
         }
     }
