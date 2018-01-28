@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour {
     public enum State { Splash, MainMenu, Game, Pause, GameOver };
     public enum Types { None, Green, Red, Blue, Yellow };
 
-    public float splashTime = 5;
+    public float splashTime = 3;
     public RectTransform blackScreen, splashScreen, mainMenu, pauseMenu, gameOverScreen, creditsScreen;
     public Button btn2p, btn3p, btn4p;
     
