@@ -132,6 +132,10 @@ public class GameManager : MonoBehaviour {
 
     }
 
+    public void DeclareWinner() {
+        ChangeState(State.GameOver);
+    }
+
 
     private void StopGame() {
         GetComponent<VelocityManager>().StopGame();
