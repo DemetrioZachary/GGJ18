@@ -5,7 +5,7 @@ using UnityEngine;
 public class Bomb : MonoBehaviour {
 
     public float speed = 7;
-    public GameObject bombBase;
+    public GameObject bombBase, bombBody;
 
     private bool triggered = false;
     private Vector3 velocity = Vector3.zero;
@@ -19,7 +19,7 @@ public class Bomb : MonoBehaviour {
     }
 
     void Update() {
-        transform.position = new Vector3(startPosition.x + Mathf.Sin(angle) / 2f, transform.position.y, transform.position.z);
+        bombBody.transform.localPosition = new Vector3(Mathf.Sin(angle) / 3f, bombBody.transform.localPosition.y, 0);
         angle += Time.deltaTime;
         if (angle >= 2 * Mathf.PI) { angle = 0; }
 

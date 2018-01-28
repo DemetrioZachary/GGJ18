@@ -8,6 +8,7 @@ public class VelocityManager : MonoBehaviour
 {
     private List<PlayerController> players = new List<PlayerController>();
     public int playerNumber = 2;
+    public PlayerController[] playerPrefabs;
 
     private float[] startPositionsX = { -18, -22, -30 };
     private float[] startPositionsY = { 5, -5, 15, -15 };
@@ -21,34 +22,34 @@ public class VelocityManager : MonoBehaviour
     {
     }
 
-    public void StartPlayer(PlayerController[] playerPrefabs)
+    public void StartPlayers()
     {
-        StartCoroutine(SpawnPlayers(playerPrefabs));
+        StartCoroutine(SpawnPlayers());
     }
 
-    public IEnumerator SpawnPlayers(PlayerController[] playerPrefabs)
+    public IEnumerator SpawnPlayers()
     {
         for (int i = 0; i < playerNumber; ++i)
         {
             PlayerIndex testPlayerIndex = (PlayerIndex)i;
             GamePadState testState = GamePad.GetState(testPlayerIndex);
-            if (testState.IsConnected)
-            {
-                GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
+            if (testState.IsConnected) {
+
                 PlayerController pl = Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController;
                 
                 pl.SetPlayerNumber(i);
-                pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)pl.player, 0, 0); });
+                GamePad.SetVibration((PlayerIndex)pl.player, 0.7f, 0.7f); // da solo un piccolo colpetto
+                pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnComplete(() => { GamePad.SetVibration((PlayerIndex)pl.player, 0, 0); });
 
                 players.Add(pl);
             }
-            //else { StopGame(); ChangeState(State.MainMenu); }
+            
             yield return new WaitForSeconds(3);
         }
         // TODO
         // Start spawn Bombs
         // Start Sequences
-        deltaSequence = Random.Range(5f, 7f);
+        //deltaSequence = Random.Range(5f, 7f);
     }
 
     public void StopGame()

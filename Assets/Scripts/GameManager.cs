@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
     public float splashTime = 5;
     public RectTransform blackScreen, splashScreen, mainMenu, pauseMenu, gameOverScreen, creditsScreen;
     public Button btn2p, btn3p, btn4p;
-    public PlayerController[] playerPrefabs;
+    
 
     private State state = State.Splash;
 
@@ -72,7 +72,7 @@ public class GameManager : MonoBehaviour {
     private void ChangeState(State newState) {
         switch (state) {
             case State.Splash:
-                splashScreen.DOAnchorPosY(1200, 1).OnComplete(() => { splashScreen.gameObject.SetActive(false); StartState(newState); });
+                splashScreen.GetComponent<Image>().DOFade(0, 1).OnComplete(() => { splashScreen.gameObject.SetActive(false); StartState(newState); });
                 break;
             case State.MainMenu:
                 mainMenu.DOAnchorPosY(1200, 1).OnComplete(() => { mainMenu.gameObject.SetActive(false); StartState(newState); });
@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 // TODO start game
-                GetComponent<VelocityManager>().SpawnPlayers(playerPrefabs);
+                GetComponent<VelocityManager>().StartPlayers();
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour {
 
     private void StopGame() {
         GetComponent<VelocityManager>().StopGame();
-        // TODO
+        
     }
 
     public void Resume() {

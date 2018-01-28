@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: d4cc195d11e9c344b87d5c3cf2938efe
-timeCreated: 1517107483
+guid: 081a1c1f6c6b76e4ba0118e1e614d990
+timeCreated: 1517112250
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
@@ -15,10 +15,6 @@ ModelImporter:
     400004: polySurface36
     400006: polySurface37
     400008: polySurface38
-    2100000: modelPanel1ViewSelectedSet_polySurface36Mat
-    2100002: polySurface36Mat
-    2100004: polySurface37Mat
-    2100006: polySurface38Mat
     2300000: modelPanel1ViewSelectedSet_polySurface36
     2300002: polySurface36
     2300004: polySurface37
@@ -36,27 +32,27 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: modelPanel1ViewSelectedSet_polySurface36Mat
-    second: {fileID: 2100000, guid: 7175d15a6e279f84c8e83ba7e7741386, type: 2}
+    second: {fileID: 2100000, guid: bcdf8eefd0ea8044ea52a7a77859cf32, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: polySurface36Mat
-    second: {fileID: 2100000, guid: 7175d15a6e279f84c8e83ba7e7741386, type: 2}
+    second: {fileID: 2100000, guid: 0d0f97e2855a1464db5a3a719c972292, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: polySurface37Mat
-    second: {fileID: 2100000, guid: 7175d15a6e279f84c8e83ba7e7741386, type: 2}
+    second: {fileID: 2100000, guid: 9c2edccc325ffab46a3e18b54564d331, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: polySurface38Mat
-    second: {fileID: 2100000, guid: 7175d15a6e279f84c8e83ba7e7741386, type: 2}
+    second: {fileID: 2100000, guid: b1c1016b4f74b1740b828dde0ccdb5ec, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
-    materialLocation: 1
+    materialLocation: 0
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -81,8 +77,8 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
-    meshCompression: 0
+    globalScale: 0.6
+    meshCompression: 3
     addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
@@ -94,8 +90,6 @@ ModelImporter:
     optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
-    preserveHierarchy: 0
-    indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
