@@ -6,18 +6,15 @@ using XInputDotNetPure;
 
 public class PlayerController : MonoBehaviour {
     public int player;
-    public float speed = 1;
-    public float railLength = 10;
-    public float angle = 0;
+    public float speed = 0f;
     public float fireDelay = 1;
     public Projectile projectilePrefab;
-
-    public float velocity = 0f;
 
     public TransmissionElement[] currSequence = new TransmissionElement[10];
     public int currSequenceNumElement;
     public int currSequenceElement;
     public int currResponseElement;
+    public bool sequenceUltimated = false;
 
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
@@ -31,8 +28,6 @@ public class PlayerController : MonoBehaviour {
 
     public float latestScore = 0f;
     public float totalScore = 0f;
-
-    public bool sequenceUltimated;
 
     public Text SequenceFeedback;
 
@@ -50,6 +45,7 @@ public class PlayerController : MonoBehaviour {
     public void StartSequence() {
         sequencePlayTime = 0f;
         currSequenceElement = 0;
+        currResponseElement = 0;
         sequenceUltimated = false;
 
         //        Destra, Sinistra, Entrambe
@@ -62,6 +58,7 @@ public class PlayerController : MonoBehaviour {
         //DIFFICILI: ESDEDE - DSEDSD - DESEEE * -ESDSDD - SSDSEE
         //DIFFICILI ^ 2: EESDE DSD -SEDE EDDS
 
+        CurrentSequence = Random.Range(0,5);
         if (CurrentSequence == 0) {
             currSequenceNumElement = 3;
             currSequence[0].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
@@ -99,8 +96,8 @@ public class PlayerController : MonoBehaviour {
             currSequence[2].Set(TransmissionElement.Types.Right, STANDARD_PRESSION_TIME);
         }
 
-        CurrentSequence++;
-        if (CurrentSequence > 5) CurrentSequence = 0;
+        //CurrentSequence++;
+        //if (CurrentSequence > 5) CurrentSequence = 0;
     }
 
     private void Awake() {
@@ -112,7 +109,6 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.color = Color.green;
-        if (player == 2) { speed *= -1; }
         inputStr = "P" + player;
     }
 
@@ -125,7 +121,17 @@ public class PlayerController : MonoBehaviour {
         SetShield();
         Fire();
 
-        transform.position += Vector3.right * velocity * Time.deltaTime;
+        transform.position += Vector3.right * speed * Time.deltaTime;
+    }
+
+    private void UltimateSequence()
+    {
+        currResponseElement = currSequenceNumElement;
+        latestScore = SequenceRatio();
+        sequenceUltimated = true;
+        totalScore += latestScore * 100f;
+        responsePlayTime = -1f;
+        GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
     }
 
     void FixedUpdate() {
@@ -152,6 +158,11 @@ public class PlayerController : MonoBehaviour {
         else if (responsePlayTime >= 0f) {
             responsePlayTime += Time.fixedDeltaTime;
 
+            if(responsePlayTime > 2f && currSequence[currResponseElement].responseType == TransmissionElement.Types.None)
+            {
+                UltimateSequence();
+            }
+
             bool leftRumble = state.Triggers.Left > RUMBLE_TRIGGER;
             bool rightRumble = state.Triggers.Right > RUMBLE_TRIGGER;
             GamePad.SetVibration((PlayerIndex)player, state.Triggers.Left, state.Triggers.Right);
@@ -173,12 +184,9 @@ public class PlayerController : MonoBehaviour {
                 SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
                 currSequence[currResponseElement].responseDuration = responsePlayTime;
                 currResponseElement++;
-                if (currResponseElement >= currSequenceNumElement) {
-                    latestScore = SequenceRatio();
-                    sequenceUltimated = true;
-                    totalScore += latestScore * 100f;
-                    responsePlayTime = -1f;
-                    GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
+                if (currResponseElement >= currSequenceNumElement)
+                {
+                    UltimateSequence();
                 }
                 else {
                     responsePlayTime = 0f;
@@ -200,13 +208,6 @@ public class PlayerController : MonoBehaviour {
 
         return ratio;
     }
-
-    //private void Move() {
-    //    float yPos = Mathf.Sin(angle) * railLength / 2f;
-    //    transform.position = new Vector3(transform.position.x, yPos, 0);
-    //    angle += Time.deltaTime * speed;
-    //    if (Mathf.Abs(angle) >= Mathf.PI * 2) { angle = 0; }
-    //}
 
     private void SetShield() {
         //shield = GameManager.Types.None;

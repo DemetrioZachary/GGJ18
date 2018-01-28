@@ -36,7 +36,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1529229808992462}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.28, y: -5.05, z: 0}
+  m_LocalPosition: {x: -18, y: 5, z: 0}
   m_LocalScale: {x: 3, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -78,16 +78,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 014d7d0391868f6409c1970a2abd26ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: 1
-  speed: 1
-  railLength: 20
-  angle: 0
+  player: 0
+  speed: 0
   fireDelay: 1
   projectilePrefab: {fileID: 114692693575717568, guid: c43a01a10f23fb748980c17e7c77c931,
     type: 2}
   currSequenceNumElement: 0
   currSequenceElement: 0
   currResponseElement: 0
+  sequenceUltimated: 0
+  latestScore: 0
+  totalScore: 0
   SequenceFeedback: {fileID: 0}
 --- !u!212 &212504182324336190
 SpriteRenderer:
