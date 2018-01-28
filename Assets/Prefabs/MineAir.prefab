@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50999081206098370}
   m_Layer: 0
   m_Name: MineAir
-  m_TagString: Untagged
+  m_TagString: Bomb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,7 +151,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1072832362446134}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25.189884, y: 0.71692014, z: 0}
+  m_LocalPosition: {x: -10.14, y: 10.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4762574185716118}
@@ -180,7 +180,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1244554103492228}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.09, y: 0.22, z: 0}
+  m_LocalPosition: {x: -0.09, y: 0.05, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4001262247910680}
@@ -426,14 +426,14 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1072832362446134}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -451,9 +451,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.54861236}
   serializedVersion: 2
-  m_Radius: 1.86
+  m_Radius: 2.4086125
 --- !u!114 &114875471306509262
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -468,6 +468,8 @@ MonoBehaviour:
   speed: -7
   bombBase: {fileID: 1869240366523368}
   bombBody: {fileID: 1821166941293674}
+  pulse: {fileID: 198780358226421456}
+  explosion: {fileID: 0}
 --- !u!198 &198780358226421456
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -476,7 +478,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1244554103492228}
   serializedVersion: 5
   lengthInSec: 0.8
-  simulationSpeed: 0.7
+  simulationSpeed: 1
   stopAction: 0
   looping: 1
   prewarm: 1
@@ -528,7 +530,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -810962641
+  randomSeed: -68908344
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -680,7 +682,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 7
+      scalar: 8
       minScalar: 1
       maxCurve:
         serializedVersion: 2
