@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 // TODO start game
-                StartCoroutine(GetComponent<VelocityManager>().SpawnPlayers(playerPrefabs));
+                GetComponent<VelocityManager>().SpawnPlayers(playerPrefabs);
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);

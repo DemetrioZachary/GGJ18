@@ -1,18 +1,24 @@
 fileFormatVersion: 2
-guid: 26baa725b31484c4592ebc6228ce83cc
-timeCreated: 1517103272
+guid: 3fae6fda4c526f642b002fa1130cb537
+timeCreated: 1517111412
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
+    100002: Sottomarino_Ste
     400000: //RootNode
-    2100000: lambert1
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Sottomarino
-    9500000: //RootNode
-  externalObjects: {}
+    400002: Sottomarino_Ste
+    2100000: Sottomarino_SteMat
+    2300000: Sottomarino_Ste
+    3300000: Sottomarino_Ste
+    4300000: Sottomarino_Ste
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Sottomarino_SteMat
+    second: {fileID: 2100000, guid: 216290fcb8fb0214983d67f1ea338283, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -31,7 +37,7 @@ ModelImporter:
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
-    animationCompression: 3
+    animationCompression: 1
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -43,7 +49,7 @@ ModelImporter:
   meshes:
     lODScreenPercentages: []
     globalScale: 1
-    meshCompression: 3
+    meshCompression: 0
     addColliders: 0
     importVisibility: 1
     importBlendShapes: 1
@@ -61,7 +67,7 @@ ModelImporter:
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 0
+    useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0

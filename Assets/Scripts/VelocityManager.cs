@@ -21,6 +21,10 @@ public class VelocityManager : MonoBehaviour
     {
     }
 
+    public void StartPlayer(PlayerController[] playerPrefabs)
+    {
+        StartCoroutine(SpawnPlayers(playerPrefabs));
+    }
 
     public IEnumerator SpawnPlayers(PlayerController[] playerPrefabs)
     {
@@ -31,9 +35,12 @@ public class VelocityManager : MonoBehaviour
             if (testState.IsConnected)
             {
                 GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
-                players.Add(Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController);
-                players[i].transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)i, 0, 0); });
-                players[i].SetPlayerNumber(i);
+                PlayerController pl = Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController;
+                
+                pl.SetPlayerNumber(i);
+                pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)pl.player, 0, 0); });
+
+                players.Add(pl);
             }
             //else { StopGame(); ChangeState(State.MainMenu); }
             yield return new WaitForSeconds(3);
