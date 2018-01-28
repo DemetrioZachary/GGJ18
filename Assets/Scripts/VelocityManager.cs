@@ -38,7 +38,7 @@ public class VelocityManager : MonoBehaviour
                 {
                     if (pl.gameObject.activeSelf)
                     {
-                        pl.StartSequence();
+                        //pl.StartSequence();
                     }
                 }
             }

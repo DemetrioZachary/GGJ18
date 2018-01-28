@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    public float[] cameraPosZ;
+    private float[] cameraPosZ = { -25, -25, -30, -40 };
 
     public float speed = 5;
     public float headOffset = 1;
@@ -23,10 +23,11 @@ public class CameraController : MonoBehaviour {
     }
 	
 	void Update () {
-        CheckPlayers();
-        //FindPositionX();
-        Move();
-	}
+        float magnitude = (targetPosition - transform.position).magnitude;
+        if (Mathf.Abs(magnitude) > 0.001f) {
+            transform.Translate((targetPosition - transform.position).normalized * magnitude * speed * Time.deltaTime);
+        }
+    }
 
     //private void FindPositionX() {
     //    float minX = players[0].transform.position.x, maxX = minX;
@@ -48,17 +49,7 @@ public class CameraController : MonoBehaviour {
     //    }
     //}
 
-    private void Move() {
-        float magnitude = (targetPosition - transform.position).magnitude;
-        if (Mathf.Abs(magnitude) > 0.001f) {
-            transform.Translate((targetPosition - transform.position).normalized * magnitude * speed * Time.deltaTime);
-        }
-    }
-
-    public void CheckPlayers() {
-        int count = 0;
-        foreach(PlayerController player in players) { if (player.gameObject.activeSelf) { count++; } }
-        print(count);
-        targetPosition = new Vector3(targetPosition.x, count % 2 == 0 ? 0 : 5, cameraPosZ[count - 1]);
+    public void CheckPlayers(int playerNumber) {
+        targetPosition = new Vector3(targetPosition.x, playerNumber % 2 == 0 ? 0 : 5, cameraPosZ[playerNumber - 1]);
     }
 }

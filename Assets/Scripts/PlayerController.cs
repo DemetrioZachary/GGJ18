@@ -124,6 +124,10 @@ public class PlayerController : MonoBehaviour {
         transform.position += Vector3.right * speed * Time.deltaTime;
     }
 
+    public void SetPlayerNumber(int number) {
+        player = number;
+    }
+
     private void UltimateSequence()
     {
         currResponseElement = currSequenceNumElement;

@@ -7,27 +7,24 @@ using XInputDotNetPure;
 
 public class GameManager : MonoBehaviour {
 
-    private float[] startPositionsX = { };
-    private float[] startPositionsY = { };
+    private float[] startPositionsX = { -18, -22, -30 };
+    private float[] startPositionsY = { 5, -5, 15, -15 };
 
-    public enum State { Splash, MainMenu, Game, Pause, GameOver};
+    public enum State { Splash, MainMenu, Game, Pause, GameOver };
     public enum Types { None, Green, Red, Blue, Yellow };
 
     public float splashTime = 5;
     public RectTransform blackScreen, splashScreen, mainMenu, pauseMenu, gameOverScreen, creditsScreen;
     public Button btn2p, btn3p, btn4p;
+    public PlayerController[] playerPrefabs;
 
     private State state = State.Splash;
-    [SerializeField]
-    private PlayerController[] players;
     private int playerNumber = 2;
     private float delayTime = 0;
+    private List<PlayerController> players = new List<PlayerController>();
 
-    private bool playerIndexSet = false;
-    GamePadState prevState;
 
     private void Awake() {
-        players = FindObjectsOfType<PlayerController>();
         StartState(State.Splash);
     }
 
@@ -37,7 +34,7 @@ public class GameManager : MonoBehaviour {
                 if (delayTime > splashTime) {
                     ChangeState(State.MainMenu);
                     delayTime = 0;
-                } 
+                }
                 delayTime += Time.deltaTime;
                 break;
             case State.MainMenu:
@@ -57,7 +54,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 if (delayTime < 0.6) { delayTime += Time.deltaTime; }
-                else if(Input.GetKeyDown(KeyCode.Escape)){
+                else if (Input.GetKeyDown(KeyCode.Escape)) {
                     delayTime = 0;
                     ChangeState(State.Pause);
                 }
@@ -85,15 +82,17 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 if (newState != State.Pause) {
-                    // TODO Stop game
+                    StopGame();
                 }
                 StartState(newState);
                 break;
             case State.Pause:
                 Time.timeScale = 1;
-                pauseMenu.DOAnchorPosY(1200, 0.3f).OnComplete(() => { pauseMenu.gameObject.SetActive(false);
+                pauseMenu.DOAnchorPosY(1200, 0.3f).OnComplete(() => {
+                    pauseMenu.gameObject.SetActive(false);
                     if (newState == State.Game) { state = newState; }
-                    else { /* Stop game */ StartState(newState); } });
+                    else { StopGame(); StartState(newState); }
+                });
                 break;
             case State.GameOver:
                 gameOverScreen.DOAnchorPosY(1200, 1).OnComplete(() => { gameOverScreen.gameObject.SetActive(false); StartState(newState); });
@@ -104,11 +103,11 @@ public class GameManager : MonoBehaviour {
         state = newState;
         switch (state) {
             case State.Splash:
-                splashScreen.DOAnchorPosY(0, 0.1f);
                 blackScreen.GetComponent<RawImage>().color = Color.black;
                 blackScreen.gameObject.SetActive(true);
                 splashScreen.gameObject.SetActive(true);
-                blackScreen.GetComponent<RawImage>().DOFade(0, 1).OnComplete(()=> { blackScreen.gameObject.SetActive(false); });
+                splashScreen.DOAnchorPosY(0, 0.1f);
+                blackScreen.GetComponent<RawImage>().DOFade(0, 1).OnComplete(() => { blackScreen.gameObject.SetActive(false); });
                 break;
             case State.MainMenu:
                 mainMenu.gameObject.SetActive(true);
@@ -116,7 +115,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 // TODO start game
-
+                StartCoroutine(SpawnPlayers());
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);
@@ -128,9 +127,11 @@ public class GameManager : MonoBehaviour {
                 break;
         }
     }// ------------------------------------------------------------------
-    
+
     public void StartNewGame(int playerNumber) {
         this.playerNumber = playerNumber;
+        ChangeState(State.Game);
+
     }
 
     private IEnumerator SpawnPlayers() {
@@ -139,16 +140,24 @@ public class GameManager : MonoBehaviour {
             GamePadState testState = GamePad.GetState(testPlayerIndex);
             if (testState.IsConnected) {
                 GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
-                players[i].gameObject.SetActive(true);
+                players.Add(Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController);
                 players[i].transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)i, 0, 0); });
+                players[i].SetPlayerNumber(i);
             }
             else { StopGame(); ChangeState(State.MainMenu); }
             yield return new WaitForSeconds(3);
         }
+        // TODO
+        // Start spawn Bombs
+        // Start Sequences
     }
 
     private void StopGame() {
-
+        for(int i=0; i < players.Count; i++) {
+            Destroy(players[i].gameObject);
+        }
+        players.Clear();
+        // TODO
     }
 
     public void Resume() {
