@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Lean.Pool;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,37 @@ public class VelocityManager : MonoBehaviour
     OffsetAnimator offAnimator;
 
     private float deltaSequence;
+
+    public GameObject BombAir;
+    public GameObject BombWater;
+
+    // This stores all spawned prefabs, so they can be despawned later
+    private Stack<GameObject> spawnedPrefabs = new Stack<GameObject>();
+
+        public void SpawnPrefab()
+        {
+            var clone = LeanPool.Spawn(Random.value > 0.5f ? BombAir : BombWater, Vector3.right * 20f, Quaternion.identity, null);
+        clone.transform.DOMoveX(-20, 15f);
+
+            // Add the clone to the clones stack if it doesn't exist
+            // If this prefab can be recycled then it could already exist
+            if (spawnedPrefabs.Contains(clone) == false)
+            {
+                spawnedPrefabs.Push(clone);
+            }
+        }
+
+        public void DespawnPrefab()
+        {
+            if (spawnedPrefabs.Count > 0)
+            {
+                // Get the last clone
+                var clone = spawnedPrefabs.Pop();
+
+                // Despawn it
+                LeanPool.Despawn(clone);
+            }
+        }
 
     private void Awake()
     {
@@ -118,13 +150,24 @@ public class VelocityManager : MonoBehaviour
         if (updateVel)
         {
             deltaSequence = Random.Range(4f, 6f);
+            SpawnPrefab();
             foreach (PlayerController pl in players)
             {
                 if (pl.gameObject.activeSelf)
                 {
                     pl.sequenceUltimated = false;
-                    if ((plMaxScore.latestScore - plMinScore.latestScore) > 0)
-                        pl.speed += 0.2f * (plMaxScore.transform.position.x > pl.transform.position.x ? -1 : 1) * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
+                    float deltaScore = (plMaxScore.latestScore - plMinScore.latestScore);
+                    if (deltaScore > 0)
+                    {
+                        if (plMaxScore.transform.position.x > 10)
+                        {
+                            pl.speed -= 0.2f * (plMaxScore.latestScore - pl.latestScore) / deltaScore;
+                        }
+                        else
+                        {
+                            pl.speed += 0.2f * (pl.latestScore - plMinScore.latestScore) / deltaScore;
+                        }
+                    }
                 }
             }
 
