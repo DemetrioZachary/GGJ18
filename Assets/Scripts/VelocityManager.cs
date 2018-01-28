@@ -146,7 +146,7 @@ public class VelocityManager : MonoBehaviour
                 }
             }
 
-            offAnimator.Scale += speedForBck*0.1f;
+            offAnimator.Speed += speedForBck*0.1f;
         }
 
         // Swap dei binari e impostazione del livello

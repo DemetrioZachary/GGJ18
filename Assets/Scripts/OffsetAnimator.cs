@@ -7,14 +7,16 @@ public class OffsetAnimator : MonoBehaviour
     [SerializeField]
     private float scale = 0.2f;
 
-    public float Scale
+    public float speed = 1.0f;
+
+    public float Speed
     {
-        get { return scale; }
+        get { return speed; }
         set
         {
-            scale = value;
+            speed = value;
             for (int i = 0; i < transform.childCount; ++i)
-                transform.GetChild(i).GetComponent<OffsetAnimator>().Scale = value * 1.25f;
+                transform.GetChild(i).GetComponent<OffsetAnimator>().Speed = value;
         }
     }
 
