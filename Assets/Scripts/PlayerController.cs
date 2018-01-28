@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour {
     public float latestScore = 0f;
     public float totalScore = 0f;
 
-    public Text SequenceFeedback;
+    //public Text SequenceFeedback;
 
     GamePadState state;
     GamePadState prevState;
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour {
             else if (currSequence[currResponseElement].responseType == TransmissionElement.Types.Left && (!leftRumble || rightRumble) ||
                 currSequence[currResponseElement].responseType == TransmissionElement.Types.Right && (leftRumble || !rightRumble) ||
                 currSequence[currResponseElement].responseType == TransmissionElement.Types.Both && (!leftRumble || !rightRumble)) {
-                SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
+                //SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
                 currSequence[currResponseElement].responseDuration = responsePlayTime;
                 currResponseElement++;
                 if (currResponseElement >= currSequenceNumElement)
@@ -199,7 +199,7 @@ public class PlayerController : MonoBehaviour {
             }
         }
         else {
-            SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
+            //SequenceFeedback.text = string.Format("Punteggio P{0} : {1:P3} - {2:n3}", player, latestScore, totalScore);
             GamePad.SetVibration((PlayerIndex)player, 0f, 0f);
         }
 
@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour {
         //else if (prevState.DPad.Left == ButtonState.Released && state.DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
         //else if (prevState.DPad.Up == ButtonState.Released && state.DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; GoToRail(Mathf.Sign(transform.position.y) * -5f); }
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
         else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
         else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
         else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }

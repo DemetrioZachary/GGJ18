@@ -1,10 +1,16 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using XInputDotNetPure;
 
 public class VelocityManager : MonoBehaviour
 {
-    List<PlayerController> players = new List<PlayerController>();//<---
+    private List<PlayerController> players = new List<PlayerController>();
+    public int playerNumber = 2;
+
+    private float[] startPositionsX = { -18, -22, -30 };
+    private float[] startPositionsY = { 5, -5, 15, -15 };
 
     [SerializeField]
     OffsetAnimator offAnimator;
@@ -15,8 +21,36 @@ public class VelocityManager : MonoBehaviour
     {
     }
 
-    public void OnScorePoint(PlayerController sender, float latestScore)
+
+    public IEnumerator SpawnPlayers(PlayerController[] playerPrefabs)
     {
+        for (int i = 0; i < playerNumber; ++i)
+        {
+            PlayerIndex testPlayerIndex = (PlayerIndex)i;
+            GamePadState testState = GamePad.GetState(testPlayerIndex);
+            if (testState.IsConnected)
+            {
+                GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
+                players.Add(Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController);
+                players[i].transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)i, 0, 0); });
+                players[i].SetPlayerNumber(i);
+            }
+            //else { StopGame(); ChangeState(State.MainMenu); }
+            yield return new WaitForSeconds(3);
+        }
+        // TODO
+        // Start spawn Bombs
+        // Start Sequences
+        GetComponent<VelocityManager>().StartSequences();
+    }
+
+    public void StopGame()
+    {
+        for (int i = 0; i < players.Count; i++)
+        {
+            Destroy(players[i].gameObject);
+        }
+        players.Clear();
     }
 
     // Use this for initialization
@@ -32,7 +66,7 @@ public class VelocityManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (players.Count == 0) { return; }//<---
+        if (players.Count < 2) { return; }//<---
         if (deltaSequence > 0f)
         {
             deltaSequence -= Time.deltaTime;

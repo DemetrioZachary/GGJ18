@@ -7,8 +7,7 @@ using XInputDotNetPure;
 
 public class GameManager : MonoBehaviour {
 
-    private float[] startPositionsX = { -18, -22, -30 };
-    private float[] startPositionsY = { 5, -5, 15, -15 };
+
 
     public enum State { Splash, MainMenu, Game, Pause, GameOver };
     public enum Types { None, Green, Red, Blue, Yellow };
@@ -19,10 +18,8 @@ public class GameManager : MonoBehaviour {
     public PlayerController[] playerPrefabs;
 
     private State state = State.Splash;
-    private int playerNumber = 2;
-    private float delayTime = 0;
-    private List<PlayerController> players = new List<PlayerController>();
 
+    private float delayTime = 0;
 
     private void Awake() {
         StartState(State.Splash);
@@ -115,7 +112,7 @@ public class GameManager : MonoBehaviour {
                 break;
             case State.Game:
                 // TODO start game
-                StartCoroutine(SpawnPlayers());
+                StartCoroutine(GetComponent<VelocityManager>().SpawnPlayers(playerPrefabs));
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);
@@ -129,34 +126,14 @@ public class GameManager : MonoBehaviour {
     }// ------------------------------------------------------------------
 
     public void StartNewGame(int playerNumber) {
-        this.playerNumber = playerNumber;
+       GetComponent<VelocityManager>().playerNumber = playerNumber;
         ChangeState(State.Game);
 
     }
 
-    private IEnumerator SpawnPlayers() {
-        for (int i = 0; i < playerNumber; ++i) {
-            PlayerIndex testPlayerIndex = (PlayerIndex)i;
-            GamePadState testState = GamePad.GetState(testPlayerIndex);
-            if (testState.IsConnected) {
-                GamePad.SetVibration((PlayerIndex)i, 0.7f, 0.7f);
-                players.Add(Instantiate(playerPrefabs[i], new Vector3(-50, startPositionsY[i], 0), Quaternion.identity) as PlayerController);
-                players[i].transform.DOMoveX(startPositionsX[playerNumber - 2], 2).OnComplete(() => { GamePad.SetVibration((PlayerIndex)i, 0, 0); });
-                players[i].SetPlayerNumber(i);
-            }
-            else { StopGame(); ChangeState(State.MainMenu); }
-            yield return new WaitForSeconds(3);
-        }
-        // TODO
-        // Start spawn Bombs
-        // Start Sequences
-    }
 
     private void StopGame() {
-        for(int i=0; i < players.Count; i++) {
-            Destroy(players[i].gameObject);
-        }
-        players.Clear();
+        GetComponent<VelocityManager>().StopGame();
         // TODO
     }
 
