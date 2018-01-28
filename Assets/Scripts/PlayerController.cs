@@ -428,7 +428,7 @@ public class PlayerController : MonoBehaviour {
 
     public void HandleHit(GameManager.Types HitType) {
         if (HitType != shield) {
-            // TODO
+            //GetComponent<Rigidbody2D>().AddForce(new Vector2(-10000, 0), ForceMode2D.Impulse);
         }
     }
 

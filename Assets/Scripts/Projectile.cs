@@ -47,10 +47,21 @@ public class Projectile : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D coll) {
         if (coll.CompareTag("Player")) {
             coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
+            StartCoroutine(Detonate());
         }
         else if (coll.gameObject.CompareTag("Bomb")) {
             coll.gameObject.GetComponent<Bomb>().TriggerBomb(type);
+            StartCoroutine(Detonate());
         }
-        
+    }
+
+    private IEnumerator Detonate() {
+        ParticleSystem exp = Instantiate(explosion, transform.position, Quaternion.identity) as ParticleSystem;
+        exp.startSize = 5;
+        trail.Stop();
+        Destroy(mesh.gameObject);
+        yield return new WaitForSeconds(2);
+        Destroy(exp.gameObject);
+        Destroy(gameObject);
     }
 }

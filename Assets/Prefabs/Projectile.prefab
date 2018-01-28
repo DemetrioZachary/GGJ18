@@ -183,6 +183,8 @@ MonoBehaviour:
   speed: 15
   mesh: {fileID: 23743396595499944}
   trail: {fileID: 198416861956482276}
+  explosion: {fileID: 198841781786156066, guid: 7fdda3c6252719d43af5893ff316daa6,
+    type: 2}
 --- !u!198 &198416861956482276
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -28,17 +28,23 @@ public class Bomb : MonoBehaviour
         {
             coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
 
+            
+            StartCoroutine(Detonate());
+            //var main = exp.main;
+            //main.duration = 2;
+            //exp.is
 
         }
     }
 
     private IEnumerator Detonate()
     {
+        ParticleSystem exp = Instantiate(explosion, transform.position, Quaternion.identity) as ParticleSystem;
         pulse.Stop();
-        explosion.Play();
         Destroy(bombBody.gameObject);
         Destroy(bombBase.gameObject);
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
+        Destroy(exp.gameObject);
         Destroy(gameObject);
     }
 
