@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 19800000}
   - component: {fileID: 19900000}
   m_Layer: 0
-  m_Name: Shield
+  m_Name: BombParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +38,7 @@ ParticleSystem:
   m_GameObject: {fileID: 100000}
   serializedVersion: 5
   lengthInSec: 0.8
-  simulationSpeed: 1
+  simulationSpeed: 0.7
   stopAction: 0
   looping: 1
   prewarm: 1
@@ -242,7 +242,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 15
+      scalar: 7
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -3362,7 +3362,7 @@ ParticleSystemRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_Materials:
-  - {fileID: 2100000, guid: 37981f3a52e6b1d4abfda98e7be1f7fc, type: 2}
+  - {fileID: 2100000, guid: 5d06779217cd7da439843bfebc785e8e, type: 2}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
