@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour {
 
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
-    private SpriteRenderer spriteRenderer;
+    private MeshRenderer meshRenderer;
     private float fireTime = 0;
 
     private float sequencePlayTime = -1f;
@@ -108,8 +108,8 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Start() {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.color = Color.green;
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
+        meshRenderer.material.color = Color.green;
         inputStr = "P" + player;
     }
 
@@ -224,16 +224,16 @@ public class PlayerController : MonoBehaviour {
 
         switch (shield) {
             case GameManager.Types.Green:
-                spriteRenderer.color = Color.green;
+                meshRenderer.material.color = Color.green;
                 break;
             case GameManager.Types.Red:
-                spriteRenderer.color = Color.red;
+                meshRenderer.material.color = Color.red;
                 break;
             case GameManager.Types.Blue:
-                spriteRenderer.color = Color.blue;
+                meshRenderer.material.color = Color.blue;
                 break;
             case GameManager.Types.Yellow:
-                spriteRenderer.color = Color.yellow;
+                meshRenderer.material.color = Color.yellow;
                 break;
                 //default:
                 //    spriteRenderer.color = Color.white;
@@ -273,8 +273,8 @@ public class PlayerController : MonoBehaviour {
         float delta = (yPos - currY);
             Sequence mySequence = DOTween.Sequence();
             mySequence.Append(transform.DOMoveY(currY + (yPos - currY) * 0.9f, 0.9f));
-            mySequence.Join(transform.DORotate(new Vector3(0, 0, Mathf.Sign(delta) * 20), 0.1f));
+            mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, Mathf.Sign(delta) * 20), 0.1f));
             mySequence.Append(transform.DOMoveY(currY + (yPos - currY), 0.1f));
-            mySequence.Join(transform.DORotate(new Vector3(0, 0, 0), 0.1f));
+            mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, 0), 0.1f));
     }
 }
