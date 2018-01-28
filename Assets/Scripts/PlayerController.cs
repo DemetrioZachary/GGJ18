@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using XInputDotNetPure;
+using DG.Tweening;
 
 public class PlayerController : MonoBehaviour {
     public int player;
@@ -121,7 +122,7 @@ public class PlayerController : MonoBehaviour {
         SetShield();
         Fire();
 
-        transform.position += Vector3.right * speed * Time.deltaTime;
+        transform.position += new Vector3(speed * Time.deltaTime, 0f, 0f);
     }
 
     public void SetPlayerNumber(int number) {
@@ -220,7 +221,7 @@ public class PlayerController : MonoBehaviour {
         //else if (prevState.DPad.Left == ButtonState.Released && state.DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
         //else if (prevState.DPad.Up == ButtonState.Released && state.DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
 
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; GoToRail(Mathf.Sign(transform.position.y) * -5f); }
         else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
         else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
         else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
@@ -268,5 +269,16 @@ public class PlayerController : MonoBehaviour {
         if (HitType != shield) {
             // TODO
         }
+    }
+
+    public void GoToRail(float yPos)
+    {
+        float currY = transform.position.y;
+        float delta = (yPos - currY);
+            Sequence mySequence = DOTween.Sequence();
+            mySequence.Append(transform.DOMoveY(currY + (yPos - currY) * 0.9f, 0.9f));
+            mySequence.Join(transform.DORotate(new Vector3(0, 0, Mathf.Sign(delta) * 20), 0.1f));
+            mySequence.Append(transform.DOMoveY(currY + (yPos - currY), 0.1f));
+            mySequence.Join(transform.DORotate(new Vector3(0, 0, 0), 0.1f));
     }
 }

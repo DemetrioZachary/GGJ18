@@ -14,7 +14,6 @@ public class VelocityManager : MonoBehaviour
 
     private void Awake()
     {
-        deltaSequence = Random.Range(5f, 7f);
     }
 
     public void OnScorePoint(PlayerController sender, float latestScore)
@@ -25,6 +24,11 @@ public class VelocityManager : MonoBehaviour
     void Start () {
 		
 	}
+
+    public void StartSequences()
+    {
+        deltaSequence = Random.Range(5f, 7f);
+    }
 
     // Update is called once per frame
     void Update()
