@@ -1329,7 +1329,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbd9ac89071f35c439eb0e3f3521a8dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7
+  minTime: 8
+  maxTime: 10
   bombBase: {fileID: 1264121940576234}
   bombBody: {fileID: 1740279979089758}
   pulse: {fileID: 198917679378143080}

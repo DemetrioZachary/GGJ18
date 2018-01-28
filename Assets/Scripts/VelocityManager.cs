@@ -31,7 +31,9 @@ public class VelocityManager : MonoBehaviour
         float yPos = isAir ? (Random.value > 0.5f ? 6 : 8) : (Random.value > 0.5f ? -10 : -12);
 
         var clone = LeanPool.Spawn(isAir ? BombAir : BombWater, Vector3.right * 30f + Vector3.up * yPos, Quaternion.identity, null);
-        clone.transform.DOMoveX(-30, Random.Range(40f, 45f));
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(clone.transform.DOMoveX(-30, Random.Range(40f, 45f)))
+            .Join(clone.transform.DOShakePosition(5,0.2f,1).SetLoops(-1, LoopType.Yoyo));
 
         // Add the clone to the clones stack if it doesn't exist
         // If this prefab can be recycled then it could already exist
