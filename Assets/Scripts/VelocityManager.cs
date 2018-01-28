@@ -10,8 +10,8 @@ public class VelocityManager : MonoBehaviour
     private List<PlayerController> players = new List<PlayerController>();
     public int playerNumber = 2;
     public PlayerController[] playerPrefabs;
-    public DeathTrigger deathTrigger;
-    public WinTrigger winTrigger;
+    //public DeathTrigger deathTrigger;
+    //public WinTrigger winTrigger;
 
     private float[] startPositionsX = { -18, -22, -30 };
     private float[] startPositionsY = { 6, -5, 16, -15 };
@@ -107,9 +107,9 @@ public class VelocityManager : MonoBehaviour
         // TODO
         // Start spawn Bombs
         // Start Sequences
-        deathTrigger.gameObject.SetActive(true);
-        winTrigger.transform.position = new Vector3(-startPositionsX[playerNumber - 2] + 15, 0, 0);
-        deathTrigger.transform.position = new Vector3(startPositionsX[playerNumber - 2] - 15, 0, 0);
+        //deathTrigger.gameObject.SetActive(true);
+        //winTrigger.transform.position = new Vector3(-startPositionsX[playerNumber - 2] + 15, 0, 0);
+        //deathTrigger.transform.position = new Vector3(startPositionsX[playerNumber - 2] - 15, 0, 0);
         deltaSequence = Random.Range(5f, 7f);
     }
 
