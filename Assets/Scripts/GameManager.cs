@@ -9,11 +9,11 @@ public class GameManager : MonoBehaviour {
 
 
 
-    public enum State { Splash, MainMenu, Game, Pause, GameOver };
+    public enum State { Splash, Logo, MainMenu, Game, Pause, GameOver };
     public enum Types { None, Green, Red, Blue, Yellow };
 
     public float splashTime = 3;
-    public RectTransform blackScreen, splashScreen, mainMenu, pauseMenu, gameOverScreen, creditsScreen;
+    public RectTransform blackScreen, splashScreen, logoScreen, characterScreen, mainMenu, pauseMenu, gameOverScreen, creditsScreen;
     public Button btn2p, btn3p, btn4p;
     
 
@@ -29,6 +29,14 @@ public class GameManager : MonoBehaviour {
         switch (state) {
             case State.Splash:
                 if (delayTime > splashTime) {
+                    ChangeState(State.Logo);
+                    delayTime = 0;
+                }
+                delayTime += Time.deltaTime;
+                break;
+            case State.Logo:
+                if (delayTime > splashTime)
+                {
                     ChangeState(State.MainMenu);
                     delayTime = 0;
                 }
@@ -74,6 +82,11 @@ public class GameManager : MonoBehaviour {
             case State.Splash:
                 splashScreen.GetComponent<Image>().DOFade(0, 1).OnComplete(() => { splashScreen.gameObject.SetActive(false); StartState(newState); });
                 break;
+            case State.Logo:
+                Sequence seq = DOTween.Sequence();
+                seq.Append(logoScreen.DOAnchorPosY(1400, 0.5f));
+                seq.Join(characterScreen.DOAnchorPosX(2600, 0.1f)).OnComplete(() => { characterScreen.gameObject.SetActive(false); StartState(newState); });
+                break;
             case State.MainMenu:
                 mainMenu.DOAnchorPosY(1200, 1).OnComplete(() => { mainMenu.gameObject.SetActive(false); StartState(newState); });
                 break;
@@ -105,6 +118,13 @@ public class GameManager : MonoBehaviour {
                 splashScreen.gameObject.SetActive(true);
                 splashScreen.DOAnchorPosY(0, 0.1f);
                 blackScreen.GetComponent<RawImage>().DOFade(0, 1).OnComplete(() => { blackScreen.gameObject.SetActive(false); });
+                break;
+            case State.Logo:
+                logoScreen.gameObject.SetActive(true);
+                Sequence seq = DOTween.Sequence();
+                seq.Append(logoScreen.DOAnchorPosY(0, 0.1f));
+                seq.Join(characterScreen.DOAnchorPosX(600, 0.1f));
+                splashScreen.GetComponent<RawImage>().DOFade(0, 1).OnComplete(() => { splashScreen.gameObject.SetActive(false); });
                 break;
             case State.MainMenu:
                 mainMenu.gameObject.SetActive(true);
