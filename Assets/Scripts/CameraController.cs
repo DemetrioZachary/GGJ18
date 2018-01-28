@@ -59,6 +59,6 @@ public class CameraController : MonoBehaviour {
         int count = 0;
         foreach(PlayerController player in players) { if (player.gameObject.activeSelf) { count++; } }
         print(count);
-        targetPosition = new Vector3(targetPosition.x, count % 2 == 0 ? 0 : -5, cameraPosZ[count - 1]);
+        targetPosition = new Vector3(targetPosition.x, count % 2 == 0 ? 0 : 5, cameraPosZ[count - 1]);
     }
 }
