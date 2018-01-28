@@ -252,6 +252,7 @@ public class PlayerController : MonoBehaviour {
         for (int i = 0; i < 10; ++i) {
             currSequence[i] = new TransmissionElement();
         }
+        transform.DOShakeRotation(10f, 5f, 1).SetLoops(-1, LoopType.Restart);
     }
 
     void Start() {
