@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
 
 
 
-    public enum State { Splash, Logo, MainMenu, Game, Pause, GameOver };
+    public enum State { Splash, Logo, MainMenu, Game, Pause, GameOver, Credits };
     public enum Types { None, Green, Red, Blue, Yellow };
 
     public float splashTime = 3;
@@ -107,6 +107,11 @@ public class GameManager : MonoBehaviour {
             case State.GameOver:
                 gameOverScreen.DOAnchorPosY(1200, 1).OnComplete(() => { gameOverScreen.gameObject.SetActive(false); StartState(newState); });
                 break;
+            case State.Credits:
+                creditsScreen.position = new Vector2(960, 1615);
+                creditsScreen.gameObject.SetActive(false);
+                StartState(newState);
+                break;
         }
     }
     private void StartState(State newState) {
@@ -145,6 +150,10 @@ public class GameManager : MonoBehaviour {
                 gameOverScreen.gameObject.SetActive(true);
                 gameOverScreen.DOAnchorPosY(0, 1);
                 break;
+            case State.Credits:
+                creditsScreen.gameObject.SetActive(true);
+                creditsScreen.DOAnchorPosY(2700, 30).OnComplete(() => { ChangeState(State.MainMenu); });
+                break;
         }
     }// ------------------------------------------------------------------
 
@@ -165,16 +174,16 @@ public class GameManager : MonoBehaviour {
         
     }
 
+    public void OpenCredits() {
+        ChangeState(State.Credits);
+    }
+
     public void Resume() {
         ChangeState(State.Game);
     }
 
     public void StartGame() {
         ChangeState(State.Game);
-    }
-
-    public void OpenCredits() {
-        // TODO
     }
 
     public void OpenMainMenu() {
