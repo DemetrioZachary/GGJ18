@@ -41,7 +41,7 @@ public class VelocityManager : MonoBehaviour
         // TODO
         // Start spawn Bombs
         // Start Sequences
-        GetComponent<VelocityManager>().StartSequences();
+        deltaSequence = Random.Range(5f, 7f);
     }
 
     public void StopGame()
@@ -57,11 +57,6 @@ public class VelocityManager : MonoBehaviour
     void Start () {
 		
 	}
-
-    public void StartSequences()
-    {
-        deltaSequence = Random.Range(5f, 7f);
-    }
 
     // Update is called once per frame
     void Update()
@@ -108,11 +103,12 @@ public class VelocityManager : MonoBehaviour
                 {
                     pl.sequenceUltimated = false;
                     if ((plMaxScore.latestScore - plMinScore.latestScore) > 0)
-                        pl.speed += 0.2f * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
+                        pl.speed += 0.2f * (plMaxScore.transform.position.x > pl.transform.position.x ? -1 : 1) * (pl.latestScore - plMinScore.latestScore) / (plMaxScore.latestScore - plMinScore.latestScore);
                 }
             }
         }
 
+        // Swap dei binari
         foreach (PlayerController pl in players)
         {
             if (pl.gameObject.activeSelf)
