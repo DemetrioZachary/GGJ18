@@ -6,11 +6,14 @@ public class Projectile : MonoBehaviour {
 
     public float speed = 15;
     public MeshRenderer mesh;
+    public ParticleSystem trail, explosion;
 
     private GameManager.Types type;
 
 
-    private void Awake() {   }
+    private void Awake() {
+        trail.Play();
+    }
 
     private void Update() {
         transform.Translate(speed * Vector3.right * Time.deltaTime);
@@ -21,28 +24,44 @@ public class Projectile : MonoBehaviour {
     public void Initialize(GameManager.Types type) {
         
         this.type = type;
+        Color color = Color.white;
         switch (type) {
             case GameManager.Types.Green:
-                mesh.material.color = Color.green;
+                color = Color.green;
                 break;
             case GameManager.Types.Red:
-                mesh.material.color = Color.red;
+                color = Color.red;
                 break;
             case GameManager.Types.Blue:
-                mesh.material.color = Color.blue;
+                color = Color.blue;
                 break;
             case GameManager.Types.Yellow:
-                mesh.material.color = Color.yellow;
+                color = Color.yellow;
                 break;
         }
+        mesh.material.color = color;
+        ParticleSystem.MainModule main = trail.main;
+        main.startColor = color;
     }
 
     private void OnTriggerEnter2D(Collider2D coll) {
         if (coll.CompareTag("Player")) {
             coll.gameObject.GetComponent<PlayerController>().HandleHit(type);
+            StartCoroutine(Detonate());
         }
         else if (coll.gameObject.CompareTag("Bomb")) {
             coll.gameObject.GetComponent<Bomb>().TriggerBomb(type);
+            StartCoroutine(Detonate());
         }
+    }
+
+    private IEnumerator Detonate() {
+        ParticleSystem exp = Instantiate(explosion, transform.position, Quaternion.identity) as ParticleSystem;
+        exp.startSize = 5;
+        trail.Stop();
+        Destroy(mesh.gameObject);
+        yield return new WaitForSeconds(2);
+        Destroy(exp.gameObject);
+        Destroy(gameObject);
     }
 }

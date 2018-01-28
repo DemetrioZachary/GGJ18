@@ -10,6 +10,8 @@ public class VelocityManager : MonoBehaviour
     private List<PlayerController> players = new List<PlayerController>();
     public int playerNumber = 2;
     public PlayerController[] playerPrefabs;
+    public DeathTrigger deathTrigger;
+    public WinTrigger winTrigger;
 
     private float[] startPositionsX = { -18, -22, -30 };
     private float[] startPositionsY = { 6, -5, 16, -15 };
@@ -52,11 +54,13 @@ public class VelocityManager : MonoBehaviour
 
             // Despawn it
             LeanPool.Despawn(clone);
+
         }
     }
 
     private void Awake()
     {
+
     }
 
     public void StartPlayers()
@@ -90,6 +94,8 @@ public class VelocityManager : MonoBehaviour
                 {
                     pl.transform.Rotate(Vector3.right, 180f);
                     pl.bubblesPs.Stop();
+                    pl.GetComponent<Rigidbody2D>().angularDrag = 100;
+                    pl.GetComponent<Rigidbody2D>().drag = 100;
                 }
                 pl.transform.DOMoveX(startPositionsX[playerNumber - 2], 2f).OnUpdate(() => GamePad.SetVibration((PlayerIndex)i, 1f, 1f));
 
@@ -101,6 +107,9 @@ public class VelocityManager : MonoBehaviour
         // TODO
         // Start spawn Bombs
         // Start Sequences
+        deathTrigger.gameObject.SetActive(true);
+        winTrigger.transform.position = new Vector3(-startPositionsX[playerNumber - 2] + 15, 0, 0);
+        deathTrigger.transform.position = new Vector3(startPositionsX[playerNumber - 2] - 15, 0, 0);
         deltaSequence = Random.Range(5f, 7f);
     }
 
