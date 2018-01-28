@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4439405492088588}
   - component: {fileID: 114932019410427878}
   - component: {fileID: 60830199150063610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player1
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4265224033393212}
   - component: {fileID: 198487814504213874}
   - component: {fileID: 199280214631496822}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Shield
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -56,7 +56,7 @@ GameObject:
   - component: {fileID: 33671068737248356}
   - component: {fileID: 23338481759788106}
   - component: {fileID: 95746794751719544}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Sottomarino_Marco
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 4623209464126124}
   - component: {fileID: 198678349498869578}
   - component: {fileID: 199598513179161252}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Bubbles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -244,8 +244,11 @@ MonoBehaviour:
   currSequenceElement: 0
   currResponseElement: 0
   sequenceUltimated: 0
+  bubblesPs: {fileID: 198678349498869578}
+  shieldPs: {fileID: 198487814504213874}
   latestScore: 0
   totalScore: 0
+  CurrLevel: 0
 --- !u!198 &198487814504213874
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -355,7 +355,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448545066153134}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.854822, y: 5.76663, z: 0}
+  m_LocalPosition: {x: 8.796452, y: -8.2192335, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4956081749758180}
@@ -425,7 +425,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1909569137271890}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.41, z: 0}
+  m_LocalPosition: {x: 0, y: 0.19, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4065126626167202}
@@ -1290,14 +1290,14 @@ Rigidbody2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1448545066153134}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -1332,6 +1332,8 @@ MonoBehaviour:
   speed: 7
   bombBase: {fileID: 1264121940576234}
   bombBody: {fileID: 1740279979089758}
+  pulse: {fileID: 198917679378143080}
+  explosion: {fileID: 0}
 --- !u!198 &198917679378143080
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -1340,7 +1342,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1909569137271890}
   serializedVersion: 5
   lengthInSec: 0.8
-  simulationSpeed: 0.7
+  simulationSpeed: 1
   stopAction: 0
   looping: 1
   prewarm: 1
@@ -1392,7 +1394,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 0
+  randomSeed: -190177558
   InitialModule:
     serializedVersion: 3
     enabled: 1

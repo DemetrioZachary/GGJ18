@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour {
     public int currResponseElement;
     public bool sequenceUltimated = false;
 
+    public ParticleSystem bubblesPs, shieldPs;
+
     private GameManager.Types shield = GameManager.Types.Green;
     private string inputStr = "";
     //private MeshRenderer meshRenderer;
@@ -255,7 +257,7 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         //meshRenderer = GetComponentInChildren<MeshRenderer>();
         //meshRenderer.material.color = Color.green;
-        inputStr = "P" + player;
+        //inputStr = "P" + player;
     }
 
     void Update() {
@@ -263,9 +265,7 @@ public class PlayerController : MonoBehaviour {
         prevState = state;
         state = GamePad.GetState((PlayerIndex)player);
 
-        //Move();
-        SetShield();
-        Fire();
+        ManageInput();
 
         transform.position += new Vector3(speed * Time.deltaTime, 0f, 0f);
     }
@@ -359,55 +359,70 @@ public class PlayerController : MonoBehaviour {
         return ratio;
     }
 
-    private void SetShield() {
-        //shield = GameManager.Types.None;
-        //if (prevState.DPad.Down == ButtonState.Released && state.DPad.Down == ButtonState.Pressed) { shield = GameManager.Types.Green; }
-        //else if(prevState.DPad.Right == ButtonState.Released && state.DPad.Right == ButtonState.Pressed) { shield = GameManager.Types.Red; }
-        //else if (prevState.DPad.Left == ButtonState.Released && state.DPad.Left == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
-        //else if (prevState.DPad.Up == ButtonState.Released && state.DPad.Up == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
-
-        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { shield = GameManager.Types.Green; }
-        else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { shield = GameManager.Types.Red; }
-        else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { shield = GameManager.Types.Blue; }
-        else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { shield = GameManager.Types.Yellow; }
-
-        //switch (shield) {
-        //    case GameManager.Types.Green:
-        //        meshRenderer.material.color = Color.green;
-        //        break;
-        //    case GameManager.Types.Red:
-        //        meshRenderer.material.color = Color.red;
-        //        break;
-        //    case GameManager.Types.Blue:
-        //        meshRenderer.material.color = Color.blue;
-        //        break;
-        //    case GameManager.Types.Yellow:
-        //        meshRenderer.material.color = Color.yellow;
-        //        break;
-        //        //default:
-        //        //    spriteRenderer.color = Color.white;
-        //        //    break;
-
-        //}
-    }
-
-    private void Fire() {
-        //if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
-        //else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
-        //else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
-        //else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
-        //else { return; }
-
-        if (fireTime <= 0 && prevState.Buttons.RightShoulder == ButtonState.Released && state.Buttons.RightShoulder == ButtonState.Pressed) {
-            float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
-            if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
-            Projectile projectile = Instantiate(projectilePrefab, transform.position, Quaternion.Euler(0, 0, Mathf.Clamp(Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI, -120, 120))) as Projectile;
-            projectile.Initialize(shield);
-            fireTime = fireDelay;
-        }
-        else if (fireTime > 0) {
+    private void ManageInput() {
+        if (fireTime > 0) {
             fireTime -= Time.deltaTime;
         }
+        GameManager.Types type = GameManager.Types.None;
+        if (prevState.Buttons.A == ButtonState.Released && state.Buttons.A == ButtonState.Pressed) { type = GameManager.Types.Green; }
+        else if (prevState.Buttons.B == ButtonState.Released && state.Buttons.B == ButtonState.Pressed) { type = GameManager.Types.Red; }
+        else if (prevState.Buttons.X == ButtonState.Released && state.Buttons.X == ButtonState.Pressed) { type = GameManager.Types.Blue; }
+        else if (prevState.Buttons.Y == ButtonState.Released && state.Buttons.Y == ButtonState.Pressed) { type = GameManager.Types.Yellow; }
+        else if(state.Buttons.RightShoulder == ButtonState.Released || (state.Buttons.A == ButtonState.Released && state.Buttons.B == ButtonState.Released && state.Buttons.X == ButtonState.Released && state.Buttons.Y == ButtonState.Released)){
+            SetShield(GameManager.Types.None);
+            return;
+        }
+        if(state.Buttons.RightShoulder == ButtonState.Pressed) {
+            SetShield(type);
+        }
+        else if(fireTime<=0) {
+            Fire(type);
+        }
+    }
+
+    private void SetShield(GameManager.Types type) {
+        if (type == GameManager.Types.None) {
+            shieldPs.Stop();
+            return;
+        }
+
+        ParticleSystem.MainModule main = shieldPs.main;
+        switch (type) {
+            case GameManager.Types.Green:
+                main.startColor = Color.green;
+                break;
+            case GameManager.Types.Red:
+                main.startColor = Color.red;
+                break;
+            case GameManager.Types.Blue:
+                main.startColor = Color.blue;
+                break;
+            case GameManager.Types.Yellow:
+                main.startColor = Color.yellow;
+                break;
+            case GameManager.Types.None:
+                break;
+        }
+        shieldPs.Play();
+    }
+
+    private void Fire(GameManager.Types type) {
+        float xValue = state.ThumbSticks.Left.X, yValue = state.ThumbSticks.Left.Y;
+        if (Mathf.Abs(xValue) < 0.01 && Mathf.Abs(yValue) < 0.01) { xValue = 1; }
+
+        float theta = Mathf.Atan2(yValue, xValue) * 180 / Mathf.PI;
+        Vector3 addition = Vector3.zero;
+        if (Mathf.Abs(theta) <= 120) {
+            addition = new Vector3(xValue, yValue, 0).normalized;
+        }
+        else {
+            addition = new Vector3(-0.5f, 0.866f * Mathf.Sign(theta), 0);
+        }
+
+        Projectile projectile = Instantiate(projectilePrefab, transform.position + addition * 4, Quaternion.Euler(0, 0, Mathf.Clamp(theta, -120, 120))) as Projectile;
+        projectile.gameObject.layer = gameObject.layer;
+        projectile.Initialize(type);
+        fireTime = fireDelay;
     }
 
     public void HandleHit(GameManager.Types HitType) {
@@ -416,14 +431,19 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    public void GoToRail(float yPos)
-    {
+    public void GoToRail(float yPos) {
         float currY = transform.position.y;
         float delta = (yPos - currY);
-            Sequence mySequence = DOTween.Sequence();
-            mySequence.Append(transform.DOMoveY(currY + (yPos - currY) * 0.9f, 0.9f));
-            mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, Mathf.Sign(delta) * 20), 0.1f));
-            mySequence.Append(transform.DOMoveY(currY + (yPos - currY), 0.1f));
-            mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, 0), 0.1f));
+        Sequence mySequence = DOTween.Sequence();
+        mySequence.Append(transform.DOMoveY(currY + (yPos - currY) * 0.9f, 0.9f));
+        mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, Mathf.Sign(delta) * 20), 0.1f));
+        mySequence.Append(transform.DOMoveY(currY + (yPos - currY), 0.1f));
+        mySequence.Join(transform.DORotate(new Vector3((yPos > currY ? 0 : 180), 0, 0), 0.1f));
+        if (currY < 0) {
+            bubblesPs.Play();
+        }
+        else {
+            bubblesPs.Stop();
+        }
     }
 }
