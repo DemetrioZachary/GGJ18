@@ -9,19 +9,14 @@ public class Bomb : MonoBehaviour {
 
     private bool triggered = false;
     private Vector3 velocity = Vector3.zero;
-    private float angle = 0;
-    private Vector3 startPosition;
 
     private GameManager.Types type = GameManager.Types.Green;
 
     void Start() {
-        startPosition = transform.position;
+
     }
 
     void Update() {
-        bombBody.transform.localPosition = new Vector3(Mathf.Sin(angle) / 3f, bombBody.transform.localPosition.y, 0);
-        angle += Time.deltaTime;
-        if (angle >= 2 * Mathf.PI) { angle = 0; }
 
         if (triggered) {
             transform.Translate(Vector3.SmoothDamp(Vector3.zero, Vector3.up * speed, ref velocity, 1f));
