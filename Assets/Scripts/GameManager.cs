@@ -131,8 +131,11 @@ public class GameManager : MonoBehaviour {
                 mainMenu.DOAnchorPosY(0, 1);
                 break;
             case State.Game:
-                // TODO start game
-                GetComponent<VelocityManager>().StartPlayers();
+                if (!GetComponent<VelocityManager>().enabled)
+                {
+                    GetComponent<VelocityManager>().enabled = true;
+                    GetComponent<VelocityManager>().StartPlayers();
+                }
                 break;
             case State.Pause:
                 pauseMenu.gameObject.SetActive(true);
